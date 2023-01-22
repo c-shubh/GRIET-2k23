@@ -14,10 +14,6 @@ const teacherSchema = new mongoose.Schema({
     required: [true, " must provide teacher id"],
     unique: true,
   },
-  subject: {
-    type: String,
-    required: false,
-  },
   periodIDs: {
     type: [[String]],
     required: true,
