@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "main": "app.js",
   "dependencies": {
+    "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.8.4"
+    "mongoose": "^6.8.4",
+    "nodemon": "^2.0.20"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "devDependencies": {
     "eslint": "^8.0.1",
