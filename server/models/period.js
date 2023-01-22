@@ -4,8 +4,9 @@ const periodSchema = new mongoose.Schema({
   periodID: {
     type: String,
     required: [true, "provide periodID"],
+    unique: true,
   },
-  TeacherID: {
+  teacherID: {
     type: String,
     required: true,
   },
@@ -16,8 +17,8 @@ const periodSchema = new mongoose.Schema({
   startTime: {
     type: Date,
     required: true,
-    default: Date.now   
-},
+    default: Date.now,
+  },
   endTime: {
     type: Date,
     required: true,
@@ -25,4 +26,4 @@ const periodSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("period", periodSchema);
+module.exports = mongoose.model("Period", periodSchema);
