@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getScheduleTeacher } = require("./../controller/controller");
+const { getScheduleTeacher, changePassword } = require("./../controller/controller");
 
 function debug(req, res) {
   switch (req.method) {
@@ -19,7 +19,7 @@ function debug(req, res) {
 }
 
 /* ---------------------------------- POST ---------------------------------- */
-router.post("/changePassword", debug);
+router.post("/changePassword", changePassword);
 router.post("/login", debug);
 router.post("/submitAttendanceForClass", debug);
 
