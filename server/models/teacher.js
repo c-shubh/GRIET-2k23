@@ -5,6 +5,10 @@ const teacherSchema = new mongoose.Schema({
     type: String,
     required: [true, "provide teacher name"],
   },
+  password: {
+    type: String,
+    required: true,
+  },
   teacherID: {
     type: String,
     required: [true, " must provide teacher id"],
