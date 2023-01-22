@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const { getScheduleTeacher } = require("./../controller/controller");
+
 function debug(req, res) {
   switch (req.method) {
     case "GET":
@@ -26,7 +28,7 @@ router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPrese
 router.get("/getFacultyAttendanceHistoryData/:id", debug);
 router.get("/getProfileDetails/:type/:id", debug);
 router.get("/getScheduleStudent/:id", debug);
-router.get("/getScheduleTeacher/:id", debug);
+router.get("/getScheduleTeacher/:teacherID", getScheduleTeacher);
 router.get("/getStudentAttendanceHistoryData/:id", debug);
 router.get("/getStudentPercentage/:id", debug);
 
