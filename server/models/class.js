@@ -4,16 +4,17 @@ const classSchema = new mongoose.Schema({
   classID: {
     type: String,
     required: [true, "provide classID name"],
+    unique: true,
   },
   studentRollNumbers: {
     type: [String],
     required: [true, " must rollnumbers"],
     unique: true,
   },
-  PeriodDays: {
+  periodDays: {
     type: [[String]],
     required: [true],
   },
 });
 
-module.exports = mongoose.model("class", classSchema);
+module.exports = mongoose.model("Class", classSchema);
