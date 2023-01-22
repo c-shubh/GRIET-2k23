@@ -1,20 +1,33 @@
 const express = require("express");
 const router = express.Router();
 
+function debug(req, res) {
+  switch (req.method) {
+    case "GET":
+      console.log(req.query);
+      res.send(req.params);
+      break;
+    case "POST":
+      res.send(req.body);
+      break;
+    default:
+      req.send("");
+      break;
+  }
+}
+
 /* ---------------------------------- POST ---------------------------------- */
-router.post("/changePassword", (req, res) => {});
-router.post("/login", (req, res) => {});
-router.post("/submitAttendanceForClass", (req, res) => {});
+router.post("/changePassword", debug);
+router.post("/login", debug);
+router.post("/submitAttendanceForClass", debug);
 
 /* ---------------------------------- GET ----------------------------------- */
-router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPresentValue", (req, res) => {});
-router.get("/getFacultyAttendanceHistoryData/:id", (req, res) => {});
-router.get("/getProfileDetails/:type/:id", (req, res) => {});
-router.get("/getScheduleStudent/:id", (req, res) => {
-  res.send("asdf");
-});
-router.get("/getScheduleTeacher/:id", (req, res) => {});
-router.get("/getStudentAttendanceHistoryData/:id", (req, res) => {});
-router.get("/getStudentPercentage/:id", (req, res) => {});
+router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPresentValue", debug);
+router.get("/getFacultyAttendanceHistoryData/:id", debug);
+router.get("/getProfileDetails/:type/:id", debug);
+router.get("/getScheduleStudent/:id", debug);
+router.get("/getScheduleTeacher/:id", debug);
+router.get("/getStudentAttendanceHistoryData/:id", debug);
+router.get("/getStudentPercentage/:id", debug);
 
 module.exports = router;
