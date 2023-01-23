@@ -3,6 +3,8 @@ const router = express.Router();
 
 const { getScheduleTeacher } = require("./../controller/controller");
 const { changePassword } = require("./../controller/changepassword.controller.js");
+const { loginHandler } = require("./../controller/login.controller");
+
 function debug(req, res) {
   switch (req.method) {
     case "GET":
@@ -20,7 +22,7 @@ function debug(req, res) {
 
 /* ---------------------------------- POST ---------------------------------- */
 router.post("/changePassword", changePassword);
-router.post("/login", debug);
+router.post("/login", loginHandler);
 router.post("/submitAttendanceForClass", debug);
 
 /* ---------------------------------- GET ----------------------------------- */
