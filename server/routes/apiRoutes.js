@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { getScheduleTeacher, changePassword } = require("./../controller/controller");
-
+const { getScheduleTeacher } = require("./../controller/controller");
+const { changePassword } = require("./../controller/changepassword.controller.js");
 function debug(req, res) {
   switch (req.method) {
     case "GET":
