@@ -3,22 +3,24 @@ const Teacher = require("./../models/teacher.js");
 const bcrypt = require("bcrypt");
 
 const changePassword = async (req, res) => {
-  const { type, id, currentPassword, updatedPassword } = req.body;
-  const searchQuery = type === "Student" ? { rollNo: id } : { teacherID: id };
+  let { type, id, currentPassword, updatedPassword } = req.body;
+  type = type.toLowerCase();
+  id = id.toLowerCase();
+
+  const searchQuery = type === "student" ? { rollNo: id } : { teacherID: id };
 
   let data;
-  if (type === "Student") data = await Student.find(searchQuery);
-  else data = await Teacher.find(searchQuery);
+  if (type === "student") data = await Student.findOne(searchQuery);
+  else data = await Teacher.findOne(searchQuery);
 
   var result = await bcrypt.compare(currentPassword, data[0].password);
-  console.log(data);
   if (!result) {
     return res.status(401).json({ error: "Incorrect current password" });
   } else {
-    let DB = type === "Student" ? Student : Teacher;
+    let DB = type === "student" ? Student : Teacher;
     const updatedPasswordhash = await bcrypt.hash(updatedPassword, 10);
-    DB.updateOne(searchQuery, { $set: { password: updatedPasswordhash } }, (err, doc) => {});
-    res.status(200).json({ msg: "successfully teacher password changed" });
+    await DB.updateOne(searchQuery, { $set: { password: updatedPasswordhash } });
+    res.status(200).json({ msg: `successfully ${type} password changed` });
   }
 };
 
