@@ -1,21 +1,37 @@
 const Student = require("./../models/student.js");
 const Teacher = require("./../models/teacher.js");
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 const loginHandler = async (req, res) => {
   const { type, id, password } = req.body;
   const searchQuery = type === "Student" ? { rollNo: id } : { teacherID: id };
-  
+
   let data;
   if (type === "Student") data = await Student.find(searchQuery);
   else data = await Teacher.find(searchQuery);
-  
+
   const passwordHash = data[0].password;
-  const result = await bcrypt.compare(password, passwordHash);
-  if (!result) {
-    res.status(401).json({ status: "false", msg: "incorrect password" });
-  } else {
-    res.status(201).json({ status: "true", msg: "login successfull" });
-  }
+  bcrypt.compare(password, passwordHash, (err, result) => {
+    if (err) {
+      res.status(401).json({
+        msg: "Auth failed",
+      });
+    }
+    if (result) {
+      const token = jwt.sign(
+        {
+          userId: data[0].id,
+          type: type,
+        },
+        process.env.JWT_KEY,
+        {
+          expiresIn: "5h",
+        }
+      );
+      return res.status(200).json({ status: true, msg: "login successfull", token: token });
+    } else {
+      res.status(400).json({ status: false, msg: "login failed" });
+    }
+  });
 };
 module.exports = { loginHandler };
