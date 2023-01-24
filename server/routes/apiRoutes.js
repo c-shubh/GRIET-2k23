@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getScheduleTeacher } = require("./../controller/controller");
+const { getScheduleTeacher, getScheduleStudent } = require("./../controller/controller");
 const { changePassword } = require("./../controller/changepassword.controller.js");
 const { loginHandler } = require("./../controller/login.controller");
 
@@ -29,7 +29,7 @@ router.post("/submitAttendanceForClass", debug);
 router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPresentValue", debug);
 router.get("/getFacultyAttendanceHistoryData/:id", debug);
 router.get("/getProfileDetails/:type/:id", debug);
-router.get("/getScheduleStudent/:id", debug);
+router.get("/getScheduleStudent/:id", getScheduleStudent);
 router.get("/getScheduleTeacher/:teacherID", getScheduleTeacher);
 router.get("/getStudentAttendanceHistoryData/:id", debug);
 router.get("/getStudentPercentage/:id", debug);
