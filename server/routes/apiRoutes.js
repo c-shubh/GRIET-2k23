@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { getScheduleTeacher, getScheduleStudent } = require("./../controller/controller");
-const { changePassword } = require("./../controller/changepassword.controller.js");
+const { changePassword } = require("./../controller/changePassword.controller.js");
 const { loginHandler } = require("./../controller/login.controller");
 
 function debug(req, res) {
