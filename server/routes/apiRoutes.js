@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getScheduleTeacher, getScheduleStudent } = require("./../controller/controller");
+const { getScheduleTeacher, getScheduleStudent, getProfileDetails } = require("./../controller/controller");
 const { changePassword } = require("./../controller/changePassword.controller.js");
 const { loginHandler } = require("./../controller/login.controller");
 
@@ -23,15 +23,17 @@ function debug(req, res) {
 /* ---------------------------------- POST ---------------------------------- */
 router.post("/changePassword", changePassword);
 router.post("/login", loginHandler);
+
 router.post("/submitAttendanceForClass", debug);
 
 /* ---------------------------------- GET ----------------------------------- */
 router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPresentValue", debug);
 router.get("/getFacultyAttendanceHistoryData/:id", debug);
-router.get("/getProfileDetails/:type/:id", debug);
-router.get("/getScheduleStudent/:id", getScheduleStudent);
-router.get("/getScheduleTeacher/:teacherID", getScheduleTeacher);
 router.get("/getStudentAttendanceHistoryData/:id", debug);
 router.get("/getStudentPercentage/:id", debug);
+
+router.get("/getProfileDetails/:type/:id", getProfileDetails);
+router.get("/getScheduleStudent/:id", getScheduleStudent);
+router.get("/getScheduleTeacher/:teacherID", getScheduleTeacher);
 
 module.exports = router;
