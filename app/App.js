@@ -1,17 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-
-const Stack = createNativeStackNavigator();
+import MyStack from "./navigation/index";
 
 export default function App() {
   return (
-    <View className="flex-1 items-center justify-center bg-red-400">
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <MyStack />
+    </NavigationContainer>
   );
   /*
   return (
