@@ -7,10 +7,10 @@ const loginHandler = async (req, res) => {
   const searchQuery = type === "Student" ? { rollNo: id } : { teacherID: id };
 
   let data;
-  if (type === "Student") data = await Student.find(searchQuery);
-  else data = await Teacher.find(searchQuery);
+  if (type === "Student") data = await Student.findOne(searchQuery);
+  else data = await Teacher.findOne(searchQuery);
 
-  const passwordHash = data[0].password;
+  const passwordHash = data.password;
   bcrypt.compare(password, passwordHash, (err, result) => {
     if (err) {
       res.status(401).json({
@@ -20,7 +20,7 @@ const loginHandler = async (req, res) => {
     if (result) {
       const token = jwt.sign(
         {
-          userId: data[0].id,
+          userId: data.id,
           type: type,
         },
         process.env.JWT_KEY,
