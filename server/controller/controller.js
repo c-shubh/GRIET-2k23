@@ -96,7 +96,8 @@ async function getScheduleStudent(req, res) {
       let time = dayjs().startOf("date").hour(9).minute(0);
       let toReturn = [];
 
-      for (const subject of periods) {
+      for (let i = 0; i < periods.length; i++) {
+        const subject = periods[i];
         toReturn.push({ subject: subject, start: time.toDate() });
 
         if (subject === "Break") {
@@ -107,7 +108,11 @@ async function getScheduleStudent(req, res) {
           const periodID = generatePeriodID(student.classID, subject);
           const period = await Period.findOne({ periodID: periodID });
           if (period) {
-            time = time.add(period.get("length"), "hour");
+            const periodLength = period.get("length");
+            time = time.add(periodLength, "hour");
+            if (i <= 1 && periodLength >= 2) {
+              time = time.add(10, "minute"); // since this lab covers break
+            }
           } else {
             periodNotFound(periodID, res);
             return;
