@@ -28,9 +28,9 @@ const loginHandler = async (req, res) => {
           expiresIn: "5h",
         }
       );
-      return res.status(200).json({ status: true, msg: "login successfull", token: token });
+      return res.status(200).json({ status: "true", msg: "login successfull", token: token });
     } else {
-      res.status(400).json({ status: false, msg: "login failed" });
+      res.status(400).json({ status: "false", msg: "login failed" });
     }
   });
 };
