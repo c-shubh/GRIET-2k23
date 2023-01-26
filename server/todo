@@ -1,0 +1,9 @@
+- [x] getTeacherDetails
+
+- [ ] getScheduleTeacher
+
+- [ ] submitAttendanceForClass
+- [ ] getStudentAttendanceHistoryData
+- [ ] getStudentPercentage
+- [ ] getFacultyAttendanceHistoryData
+- [ ] changeAttendanceRequestByAdmin
