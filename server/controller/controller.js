@@ -16,25 +16,32 @@ const Query = require("mongoose").Query;
 async function getStudentDetails(req, res) {
   const rollNo = req.params.id.toLowerCase();
   const /** @type{Query} */ student = await Student.findOne({ rollNo: rollNo });
-  if (!student) studentNotFound(req, res);
-  res.json({
-    rollNo: rollNo.toUpperCase(), // rollNo is to be displayed in uppercase
-    name: student.name,
-    branch: student.branch,
-    section: student.section,
-    year: dayjs().year() - dayjs(rollNo.substring(0, 2), "YY").year(),
-  });
+  if (student) {
+    res.json({
+      rollNo: rollNo.toUpperCase(), // rollNo is to be displayed in uppercase
+      name: student.name,
+      branch: student.branch,
+      section: student.section,
+      year: dayjs().year() - dayjs(rollNo.substring(0, 2), "YY").year(),
+    });
+  } else {
+    studentNotFound(rollNo, res);
+  }
+  return;
 }
 
 async function getTeacherDetails(req, res) {
   const teacherID = req.params.id.toLowerCase();
   const /** @type{Query} */ teacher = await Teacher.findOne({ teacherID: teacherID });
-  if (!teacher) teacherNotFound(teacherID, res);
-  if (!teacher) teacherNotFound(req, res);
-  res.json({
-    teacherID: teacherID,
-    name: teacher.name,
-  });
+  if (teacher) {
+    res.json({
+      teacherID: teacherID,
+      name: teacher.name,
+    });
+  } else {
+    teacherNotFound(teacherID, res);
+  }
+  return;
 }
 
 async function getProfileDetails(req, res) {
@@ -77,37 +84,45 @@ const getScheduleTeacher = async (req, res) => {
 
 async function getScheduleStudent(req, res) {
   const rollNo = req.params.id.toLowerCase();
-
   const /** @type{Query} */ student = await Student.findOne({ rollNo: rollNo });
-  if (!student) studentNotFound(rollNo, res);
+  if (student) {
+    const /** @type{Query} */ studentClass = await Class.findOne({ classID: student.classID });
+    if (studentClass) {
+      // monday: 0, ... sunday: 6
+      const dayOfWeek = (dayjs().day() - 1) % 7;
+      const /** @type{Array<string> } */ periods = studentClass.periodDays[dayOfWeek];
 
-  const /** @type{Query} */ studentClass = await Class.findOne({ classID: student.classID });
-  if (!studentClass) classNotFound(student.classID, res);
+      // start time 9:00 am
+      let time = dayjs().startOf("date").hour(9).minute(0);
+      let toReturn = [];
 
-  // monday: 0, ... sunday: 6
-  const dayOfWeek = (dayjs().day() - 1) % 7;
-  const /** @type{Array<string> } */ periods = studentClass.periodDays[dayOfWeek];
+      for (const subject of periods) {
+        toReturn.push({ subject: subject, start: time.toDate() });
 
-  // start time 9:00 am
-  let time = dayjs().startOf("date").hour(9).minute(0);
-  let toReturn = [];
-
-  for (const subject of periods) {
-    toReturn.push({ subject: subject, start: time.toDate() });
-
-    if (subject === "Break") {
-      time = time.add(10, "minute");
-    } else if (subject === "Lunch") {
-      time = time.add(45, "minute");
+        if (subject === "Break") {
+          time = time.add(10, "minute");
+        } else if (subject === "Lunch") {
+          time = time.add(45, "minute");
+        } else {
+          const periodID = generatePeriodID(student.classID, subject);
+          const period = await Period.findOne({ periodID: periodID });
+          if (period) {
+            time = time.add(period.get("length"), "hour");
+          } else {
+            periodNotFound(periodID, res);
+            return;
+          }
+        }
+      }
+      res.json(toReturn);
     } else {
-      const periodID = generatePeriodID(student.classID, subject);
-      const period = await Period.findOne({ periodID: periodID });
-      if (!period) periodNotFound(periodID, res);
-      time = time.add(period.get("length"), "hour");
+      classNotFound(student.classID, res);
+      return;
     }
+  } else {
+    studentNotFound(rollNo, res);
+    return;
   }
-
-  res.json(toReturn);
 }
 
 module.exports = {
