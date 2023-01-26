@@ -13,7 +13,7 @@ const changePassword = async (req, res) => {
   if (type === "student") data = await Student.findOne(searchQuery);
   else data = await Teacher.findOne(searchQuery);
 
-  var result = await bcrypt.compare(currentPassword, data[0].password);
+  var result = await bcrypt.compare(currentPassword, data.password);
   if (!result) {
     return res.status(401).json({ error: "Incorrect current password" });
   } else {
