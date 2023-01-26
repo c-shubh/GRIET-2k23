@@ -1,0 +1,36 @@
+{
+  "cli": {
+    "version": ">= 3.4.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+   "prebuildCommand": "prebuild --yarn",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m1-medium"
+      }
+    },
+    "production": {
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "android": {
+        "buildType": "apk"
+
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
