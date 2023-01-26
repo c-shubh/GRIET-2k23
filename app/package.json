@@ -11,6 +11,8 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
+    "@rneui/base": "^4.0.0-rc.7",
+    "@rneui/themed": "^4.0.0-rc.7",
     "expo": "~47.0.12",
     "expo-dev-client": "~2.0.1",
     "expo-splash-screen": "~0.17.5",

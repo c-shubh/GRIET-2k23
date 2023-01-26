@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
-
-const LoginScreen = (props) => {
+import { Dialog } from "@rneui/themed";
+const LoginScreen = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-
+  const [visible1, setVisible1] = useState(false);
   const handleIdChange = (text) => {
     setId(text);
+  };
+
+  const toggleDialog1 = () => {
+    setVisible1(!visible1);
   };
 
   const handlePasswordChange = (text) => {
@@ -17,39 +21,25 @@ const LoginScreen = (props) => {
     // Code to handle forget password action
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log("handling");
-    fetch("https://lionfish-app-t784j.ondigitalocean.app/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "Student",
-        id: id,
-        password: password,
-      }),
-    })
-      .then((data) => {
-        console.log("hi");
-        return data.text();
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log("err");
-        console.log(err);
-      });
-    // const url =
-    //   "https://griet-2k22-server.onrender.com/api/getProfileDetails/student/21b81a3312";
-    // fetch(url)
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     // do something with data
-    //     console.log(data);
-    //   })
-    //   .catch((rejected) => {
-    //     console.log(rejected);
-    //   });
+    const req = await fetch(
+      "https://lionfish-app-t784j.ondigitalocean.app/api/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "Student",
+          id: id,
+          password: password,
+        }),
+      }
+    );
+
+    const res = await req.json();
+    if (res.status === "false") {
+      toggleDialog1();
+    }
   };
 
   return (
@@ -77,6 +67,13 @@ const LoginScreen = (props) => {
           />
           <Button title="Login" onPress={handleLogin} color="#6200ee" />
         </View>
+        <Dialog isVisible={visible1} onBackdropPress={toggleDialog1}>
+          <Dialog.Title title="Message" />
+          <Text>Incorrect Password</Text>
+          <Dialog.Actions>
+            <Dialog.Button title="OK" onPress={toggleDialog1} />
+          </Dialog.Actions>
+        </Dialog>
       </View>
     </View>
   );
