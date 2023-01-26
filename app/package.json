@@ -5,7 +5,8 @@
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "fresh_start": "expo start --dev-client -c"
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.2",
