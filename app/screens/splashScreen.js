@@ -1,30 +1,27 @@
-import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import React from "react";
+import { View, Image, StyleSheet, Dimensions } from "react-native";
 
-export default function splashScreen({ navigation }) {
+export default function SplashScreen({ navigation }) {
+  setTimeout(() => {
+    navigation.navigate("ChooseTeacherOrStudent");
+    // seconds timeout
+  }, 2500);
   return (
-    <View>
-      <Text>splashScreen</Text>
-      <TouchableOpacity
-        style={styles.buttons}
-        onPress={() => navigation.navigate("LoginScreen")}
-      >
-        <Text style={styles.buttontext}>Start</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <Image source={require("../assets/splashbg.png")} style={styles.image} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  buttons: {
-    width: "100%",
-    backgroundColor: "#1A759F",
-    padding: 20,
-    borderRadius: 16,
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  buttontext: {
-    fontSize: 24,
-    color: "white",
-    fontWeight: "600",
+  image: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    resizeMode: "cover",
   },
 });
