@@ -17,19 +17,28 @@ const LoginScreen = (props) => {
     // Code to handle forget password action
   };
 
-  const handleLogin = async () => {
-    const data = await fetch(
-      "https://griet-2k22-server.onrender.com/api/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "Student",
-          id: id,
-          password: password,
-        }),
-      }
-    );
+  const handleLogin = () => {
+    console.log("handling");
+    fetch("https://lionfish-app-t784j.ondigitalocean.app/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "Student",
+        id: id,
+        password: password,
+      }),
+    })
+      .then((data) => {
+        console.log("hi");
+        return data.text();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("err");
+        console.log(err);
+      });
     // const url =
     //   "https://griet-2k22-server.onrender.com/api/getProfileDetails/student/21b81a3312";
     // fetch(url)
