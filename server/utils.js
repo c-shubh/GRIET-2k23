@@ -8,7 +8,7 @@ function generatePeriodID(classID, subject) {
   return (
     classID +
     subject
-      .replace(" ", "") // remove spaces from any lab names
+      .replaceAll(" ", "") // remove spaces from any lab names
       .toLowerCase()
   );
 }

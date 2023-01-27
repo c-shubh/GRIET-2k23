@@ -16,7 +16,6 @@
     "mongoose": "^6.8.4"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0",
     "eslint": "^8.0.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.25.2",
