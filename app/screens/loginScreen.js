@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { Dialog } from "@rneui/themed";
 import { TabRouter } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation, route }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -9,6 +10,17 @@ const LoginScreen = ({ navigation, route }) => {
   const handleIdChange = (text) => {
     setId(text);
   };
+  useEffect(() => {
+    AsyncStorage.getItem("loginType").then((res) => {
+      if (res != null) {
+        if (res == "Student") {
+          navigation.navigate("StudentDashboard");
+        } else {
+          navigation.navigate("TeacherDashboard");
+        }
+      }
+    });
+  }, []);
 
   const toggleDialog1 = () => {
     setVisible1(!visible1);
@@ -24,7 +36,7 @@ const LoginScreen = ({ navigation, route }) => {
 
   const handleLogin = async () => {
     console.log("handling");
-    console.log("rpm" + route.params.type)
+    console.log("rpm" + route.params.type);
     console.log("hiotesh" + route.params.toString());
     const req = await fetch(
       "https://lionfish-app-t784j.ondigitalocean.app/api/login",
@@ -44,9 +56,12 @@ const LoginScreen = ({ navigation, route }) => {
     if (res.status === "false") {
       toggleDialog1();
     } else {
+      await AsyncStorage.setItem("loginId", id);
+      await AsyncStorage.setItem("loginType", route.params.type);
       console.log("login succ");
       if (route.params.type === "Student") {
         console.log("Student login successfully");
+
         navigation.navigate("StudentDashboard", {
           type: "Student",
         });
