@@ -7,6 +7,7 @@ const {
   getScheduleStudent,
   getScheduleTeacher,
   submitAttendanceForClass,
+  getStudentPercentage,
 } = require("./../controller/controller");
 const { changePassword } = require("./../controller/changePassword.controller.js");
 const { loginHandler } = require("./../controller/login.controller");
@@ -36,7 +37,7 @@ router.post("/submitAttendanceForClass", submitAttendanceForClass);
 router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPresentValue", debug);
 router.get("/getFacultyAttendanceHistoryData/:id", debug);
 router.get("/getStudentAttendanceHistoryData/:id", debug);
-router.get("/getStudentPercentage/:id", debug);
+router.get("/getStudentPercentage/:id", getStudentPercentage);
 
 router.get("/getClassStudentRollNos/:classID", getClassStudentRollNos);
 router.get("/getProfileDetails/:type/:id", getProfileDetails);
