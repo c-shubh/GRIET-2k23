@@ -3,7 +3,8 @@ import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import ChooseTeacherOrStudent from "../screens/chooseTeacherOrStudent";
 import TeacherDashboard from "../screens/teacherDashBoard";
-import StudentDashboard from "../screens/studentDashboard";
+import StudentDashboard from "../screens/studentDashboard"
+import AttendanceScreen from "../screens/attendanceScreen";
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
@@ -33,6 +34,11 @@ function MyStack() {
       <Stack.Screen
         name="TeacherDashboard"
         component={TeacherDashboard}
+        options={{ headerShown: false }}
+      />
+  <Stack.Screen
+        name="AttendanceScreen"
+        component={AttendanceScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
