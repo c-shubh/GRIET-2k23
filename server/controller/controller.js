@@ -231,6 +231,11 @@ const getStudentPercentage = async (req, res) => {
   res.status(201).json(attendanceperc);
 };
 
+const getFacultyAttendanceHistoryData = async (req, res) => {
+  console.log(req.params);
+  res.status(201).json({ msg: "working" });
+};
+
 module.exports = {
   getClassStudentRollNos,
   getProfileDetails,
@@ -238,4 +243,5 @@ module.exports = {
   getScheduleTeacher,
   getStudentPercentage,
   submitAttendanceForClass,
+  getFacultyAttendanceHistoryData,
 };
