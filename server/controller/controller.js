@@ -1,6 +1,7 @@
 /* -------------------------------- Requires -------------------------------- */
 
 const Student = require("./../models/student.js");
+const AttendanceLog = require("./../models/attendancelog.js");
 const Teacher = require("./../models/teacher.js");
 const Class = require("./../models/class.js");
 const Period = require("./../models/period.js");
@@ -189,9 +190,37 @@ async function getClassStudentRollNos(req, res) {
   }
 }
 
+function submitAttendanceForClass(req, res) {
+  try {
+    const { periodID, teacherID, classID, date, studentRollNumbers } = req.body;
+    const attendanceLogs = [];
+    for (let rollNo in studentRollNumbers) {
+      attendanceLogs.push({
+        date,
+        periodID,
+        teacherID,
+        classID,
+        studentRollNo: rollNo,
+        present: studentRollNumbers[rollNo],
+      });
+    }
+    console.log(attendanceLogs.length);
+    AttendanceLog.insertMany(attendanceLogs, function (err, docs) {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        res.json({ msg: "saved attendance successfully" });
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.toString() });
+  }
+}
+
 module.exports = {
   getClassStudentRollNos,
   getProfileDetails,
   getScheduleStudent,
   getScheduleTeacher,
+  submitAttendanceForClass,
 };

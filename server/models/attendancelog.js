@@ -4,7 +4,6 @@ const attendanceLogSchema = new mongoose.Schema({
   studentRollNo: {
     type: String,
     required: true,
-    unique: true,
   },
   periodID: {
     type: String,
@@ -13,12 +12,10 @@ const attendanceLogSchema = new mongoose.Schema({
   teacherID: {
     type: String,
     required: [true, " must provide teacher id"],
-    unique: true,
   },
   classID: {
     type: String,
     required: [true, "provide classID name"],
-    unique: true,
   },
   date: {
     type: Date,
