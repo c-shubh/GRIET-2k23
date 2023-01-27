@@ -1,9 +1,24 @@
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
+import CurrentPeriod from "./components/currentPeriod";
+import CurrentDay from "./components/currentDay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
-import { View, Text, Button } from "react-native";
-import { StyleSheet } from "react-native";
-const StudentDashboard = ({ route }) => {
-  const [studentApiDetails, setstudentApiDetails] = useState({});
+import convertDateTimeIsoToTime from "../utils/utils";
+import getCurrentWeekday from "../utils/day";
+const StudentDashboard = () => {
+  const [studentName, setStudentName] = useState("John Doe");
+  const [currentYear, setCurrentYear] = useState("2022");
+  const [rollNumber, setRollNumber] = useState("123456");
+  const [timetable, setTimetable] = useState([
+    // {
+    //   day: "Monday",
+    //   classes: [
+    //     { name: "Math", time: "9:00am" },
+    //     { name: "English", time: "10:00am" },
+    //   ],
+    // },
+  ]);
+
   useEffect(() => {
     (async function () {
       const id = await AsyncStorage.getItem("loginId");
@@ -12,45 +27,110 @@ const StudentDashboard = ({ route }) => {
         `https://lionfish-app-t784j.ondigitalocean.app/api/getProfileDetails/student/${id}`
       );
       data = await data.json();
-      setstudentApiDetails(data);
+      setRollNumber(data.rollNo);
+      setCurrentYear(data.year);
+      setStudentName(data.name);
+
+      var timetableData = await fetch(
+        `https://lionfish-app-t784j.ondigitalocean.app/api/getScheduleStudent/${id}`
+      );
+      timetableData = await timetableData.json();
+      var finalClassess = [];
+      timetableData = timetableData.forEach((period) => {
+        finalClassess.push({
+          name: period.subject,
+          time: convertDateTimeIsoToTime(period.start),
+        });
+      });
+      setTimetable([
+        {
+          day: getCurrentWeekday(),
+          classes: finalClassess,
+        },
+      ]);
     })();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome, {studentApiDetails.name}</Text>
-      <Button
-        title="View Attendance History"
-        onPress={() => {
-          // navigate to attendance history screen
-        }}
-      />
+      <Text style={styles.headerText}>Student Dashboard</Text>
+      <View style={styles.studentInfoContainer}>
+        <Text style={styles.infoText}>Student Name: {studentName}</Text>
+        <Text style={styles.infoText}>Current Year: {currentYear}</Text>
+        <Text style={styles.infoText}>Roll Number: {rollNumber}</Text>
+      </View>
+      <CurrentDay />
+
+      <ScrollView style={styles.timetableContainer}>
+        {timetable.map((day, index) => {
+          return (
+            <View key={index} style={styles.dayContainer}>
+              {day.classes.map((classInfo, classIndex) => (
+                <View key={classIndex} style={styles.classContainer}>
+                  <Text style={styles.classText}>{classInfo.name}</Text>
+                  <Text style={styles.classText}>{classInfo.time}</Text>
+                </View>
+              ))}
+            </View>
+          );
+        })}
+        <CurrentPeriod />
+      </ScrollView>
     </View>
   );
 };
 
-export default StudentDashboard;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 20,
+    backgroundColor: "#F5F5F5",
   },
-  welcomeText: {
+  headerText: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
   },
-  scheduleContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
+  studentInfoContainer: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+    elevation: 1,
   },
-  scheduleText: {
+  infoText: {
     fontSize: 16,
+    marginBottom: 5,
+  },
+  timetableHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  timetableContainer: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    elevation: 1,
+  },
+  dayContainer: {
     marginBottom: 10,
   },
+  dayText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  classContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  classText: {
+    fontSize: 14,
+  },
 });
+
+export default StudentDashboard;
