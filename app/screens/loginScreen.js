@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { Dialog } from "@rneui/themed";
-const LoginScreen = () => {
+import { TabRouter } from "@react-navigation/native";
+const LoginScreen = ({ navigation, route }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [visible1, setVisible1] = useState(false);
@@ -23,13 +24,15 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     console.log("handling");
+    console.log("rpm" + route.params.type)
+    console.log("hiotesh" + route.params.toString());
     const req = await fetch(
       "https://lionfish-app-t784j.ondigitalocean.app/api/login",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "Student",
+          type: route.params.type,
           id: id,
           password: password,
         }),
@@ -37,8 +40,22 @@ const LoginScreen = () => {
     );
 
     const res = await req.json();
+    console.log(res);
     if (res.status === "false") {
       toggleDialog1();
+    } else {
+      console.log("login succ");
+      if (route.params.type === "Student") {
+        console.log("Student login successfully");
+        navigation.navigate("StudentDashboard", {
+          type: "Student",
+        });
+      } else {
+        console.log("Teacher login successfully");
+        navigation.navigate("TeacherDashboard", {
+          type: "Teacher",
+        });
+      }
     }
   };
 
