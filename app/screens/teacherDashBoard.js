@@ -12,7 +12,7 @@ import SimpleDialog from "./components/dialog";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
 import TeacherCard from "./components/teacherCard";
-const TeacherDashboard = ({navigation}) => {
+const TeacherDashboard = ({ navigation }) => {
   const [timetable, setTimetable] = useState([
     // {
     //   day: "Monday",
@@ -23,13 +23,13 @@ const TeacherDashboard = ({navigation}) => {
     // },
   ]);
   const [currentPeriod, setcurrentPeriod] = useState("No Class");
-
+  const [currentClassId, setCurrentClassID] = useState("");
   useEffect(() => {
     (async function () {
       const id = await AsyncStorage.getItem("loginId");
 
       var timetableData = await fetch(
-        `https://lionfish-app-t784j.ondigitalocean.app/api/getScheduleStudent/${id}`
+        `https://lionfish-app-t784j.ondigitalocean.app/api/getScheduleTeacher/${id}`
       );
       timetableData = await timetableData.json();
       var finalClassess = [];
@@ -37,14 +37,20 @@ const TeacherDashboard = ({navigation}) => {
         finalClassess.push({
           name: period.subject,
           time: convertDateTimeIsoToTime(period.start),
-          helperTime: currentPeriodHelper(period.start),
+          startTime: currentPeriodHelper(period.start),
+          section: period.section,
+          class: period.branch,
+          classId: period.classID,
         });
       });
 
       finalClassess.push({
         name: "End of Day",
         time: " 3:55 PM",
-        helperTime: "15:55",
+        startTime: "15:55",
+        section: "",
+        class: "",
+        classId: "",
       });
 
       setTimetable([
@@ -54,11 +60,15 @@ const TeacherDashboard = ({navigation}) => {
         },
       ]);
       console.log(
-        "hitesh" + findCurrentPeriod(finalClassess.map((e) => e.helperTime))
+        "hitesh" + findCurrentPeriod(finalClassess.map((e) => e.startTime))
       );
       setcurrentPeriod(
-        finalClassess[findCurrentPeriod(finalClassess.map((e) => e.helperTime))]
+        finalClassess[findCurrentPeriod(finalClassess.map((e) => e.startTime))]
           .name
+      );
+      setCurrentClassID(
+        finalClassess[findCurrentPeriod(finalClassess.map((e) => e.startTime))]
+          .classId
       );
     })();
   }, []);
@@ -76,7 +86,7 @@ const TeacherDashboard = ({navigation}) => {
               {day.classes.map((classInfo, classIndex) => (
                 <View key={classIndex} style={styles.classContainer}>
                   <Text style={styles.classText}>{classInfo.name}</Text>
-                  <Text style={styles.classText}>{classInfo.helperTime}</Text>
+                  <Text style={styles.classText}>{classInfo.startTime}</Text>
                 </View>
               ))}
             </View>
@@ -89,7 +99,7 @@ const TeacherDashboard = ({navigation}) => {
               setBottomText("failed, reason: day already ended");
             } else {
               navigation.navigate("AttendanceScreen", {
-                classId: "21csed",
+                classId: currentClassId,
               });
             }
           }}

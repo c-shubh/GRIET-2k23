@@ -22,7 +22,7 @@ const TeacherCard = () => {
       <View style={styles.card}>
         <View style={styles.cardContent}>
           <Text style={styles.title}>Teacher Name: {teacherData.name}</Text>
-          <Text style={styles.subtitle}>Username: {teacherData.teacherId}</Text>
+          <Text style={styles.subtitle}>Username: {teacherData.teacherID}</Text>
         </View>
       </View>
     </View>
