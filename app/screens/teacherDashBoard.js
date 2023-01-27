@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, Button } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
+import TeacherDevicesList from "./components/teacherDeviceList";
 function DeviceList({ devices }) {
   if (devices.length === 0) {
     return (
@@ -74,7 +75,7 @@ function NearbyDevicesScreen({ onStartAttendance }) {
           }}
         />
       </View>
-      <DeviceList devices={devices} />
+      <TeacherDevicesList />
     </View>
   );
 }
