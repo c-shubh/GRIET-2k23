@@ -9,6 +9,7 @@
     "fresh_start": "expo start --dev-client -c"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
     "@rneui/base": "^4.0.0-rc.7",
