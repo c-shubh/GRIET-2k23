@@ -11,6 +11,7 @@ import findCurrentPeriod from "../utils/currentPeriod";
 import SimpleDialog from "./components/dialog";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
+import * as LocalAuthentication from 'expo-local-authentication';
 const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");
@@ -104,6 +105,11 @@ const StudentDashboard = () => {
               setBottomText("failed, reason: day already ended");
             } else {
               const id = await AsyncStorage.getItem("loginId");
+              const biometricSucc = await (await LocalAuthentication.authenticateAsync()).success;
+              if(!biometricSucc)  {
+                setBottomText("biometric failed");
+                return;
+              }
               NativeModules.ContactTracerModule.setUserId(id).then(
                 (userId) => {
                   NativeModules.ContactTracerModule.initialize()
@@ -131,10 +137,13 @@ const StudentDashboard = () => {
 
                     .then((e) => {
                       NativeModules.ContactTracerModule.enableTracerService();
+                    })
+                    
+                    .then((e) => {
+              setBottomText("Attendance Request Sent!");
                     });
                 }
               );
-              setBottomText("Attendance Request Sent!");
             }
           }}
         />
