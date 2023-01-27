@@ -7,7 +7,6 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-
 const DeviceList = () => {
   const [devices, setDevices] = useState([
     { name: "Device 1", checked: false, range: "Short" },
@@ -39,8 +38,19 @@ const DeviceList = () => {
     );
   };
 
+  const presentStudents = devices.filter((d) => d.checked).length;
+  const absentees = devices.filter((d) => !d.checked).length;
+  const totalStudents = devices.length;
+
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>
+          Present Students: {presentStudents}
+        </Text>
+        <Text style={styles.headerText}>Absentees: {absentees}</Text>
+        <Text style={styles.headerText}>Total Students: {totalStudents}</Text>
+      </View>
       {devices.map((device, index) => (
         <TouchableOpacity key={index} onPress={() => toggleCheck(index)}>
           <View style={styles.deviceContainer}>
@@ -62,7 +72,6 @@ const DeviceList = () => {
     </ScrollView>
   );
 };
-
 const styles = {
   container: {
     backgroundColor: "white",
@@ -93,6 +102,24 @@ const styles = {
     width: 20,
     height: 20,
     marginLeft: 10,
+  },
+  countContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    backgroundColor: "#f5f5f5",
+    borderBottomWidth: 1,
+    borderBottomColor: "#f5f5f5",
+  },
+  countText: {
+    fontSize: 18,
+    color: "#555",
+    marginRight: 10,
+    marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 };
 
