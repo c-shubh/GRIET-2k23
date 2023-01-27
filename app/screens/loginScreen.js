@@ -76,7 +76,7 @@ const LoginScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Student Login</Text>
+      <Text style={styles.title}>{route.params.type} Login</Text>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
