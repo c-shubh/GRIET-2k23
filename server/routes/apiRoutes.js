@@ -6,6 +6,7 @@ const {
   getProfileDetails,
   getScheduleStudent,
   getScheduleTeacher,
+  submitAttendanceForClass,
 } = require("./../controller/controller");
 const { changePassword } = require("./../controller/changePassword.controller.js");
 const { loginHandler } = require("./../controller/login.controller");
@@ -29,7 +30,7 @@ function debug(req, res) {
 router.post("/changePassword", changePassword);
 router.post("/login", loginHandler);
 
-router.post("/submitAttendanceForClass", debug);
+router.post("/submitAttendanceForClass", submitAttendanceForClass);
 
 /* ---------------------------------- GET ----------------------------------- */
 router.get("/changeAttendanceRequestByAdmin/:studentID/:periodID/:date/:newPresentValue", debug);
