@@ -219,15 +219,16 @@ function submitAttendanceForClass(req, res) {
 }
 
 const getStudentPercentage = async (req, res) => {
-  console.log(req.params);
+  // console.log(req.params);
   let attented = await AttendanceLog.find({ studentRollNo: req.params.id, present: true });
   attented = attented.length;
   let notattented = await AttendanceLog.find({ studentRollNo: req.params.id, present: false });
   notattented = notattented.length;
+  if (attented == 0 && notattented == 0) {
+    res.json({ msg: `attendance log not found for user ${req.params.id}` });
+  }
   const attendanceperc = (attented / (attented + notattented)) * 100;
-  if (attendanceperc === null) {
-    res.json({ msg: "invalid student rollnumber" });
-  } else res.status(201).json(attendanceperc);
+  res.status(201).json(attendanceperc);
 };
 
 module.exports = {
