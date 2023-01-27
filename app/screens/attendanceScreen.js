@@ -98,6 +98,8 @@ function NearbyDevicesScreen({ route }) {
       </View>
       <TeacherDevicesList
         classId={classId}
+        teacherId={route.params.teacherId}
+        periodId={route.params.periodId}
         shouldSubmit={false}
         setDevicesOuter={(dev) => {
           setDevices(dev);
