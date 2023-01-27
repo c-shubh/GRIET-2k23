@@ -8,6 +8,7 @@ const Period = require("./../models/period.js");
 const { generatePeriodID, studentNotFound, classNotFound, periodNotFound, teacherNotFound } = require("../utils");
 const dayjs = require("dayjs");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
+const { json } = require("express");
 dayjs.extend(customParseFormat);
 // eslint-disable-next-line no-unused-vars
 const Query = require("mongoose").Query;
@@ -217,10 +218,23 @@ function submitAttendanceForClass(req, res) {
   }
 }
 
+const getStudentPercentage = async (req, res) => {
+  console.log(req.params);
+  let attented = await AttendanceLog.find({ studentRollNo: req.params.id, present: true });
+  attented = attented.length;
+  let notattented = await AttendanceLog.find({ studentRollNo: req.params.id, present: false });
+  notattented = notattented.length;
+  const attendanceperc = (attented / (attented + notattented)) * 100;
+  if (attendanceperc === null) {
+    res.json({ msg: "invalid student rollnumber" });
+  } else res.status(201).json(attendanceperc);
+};
+
 module.exports = {
   getClassStudentRollNos,
   getProfileDetails,
   getScheduleStudent,
   getScheduleTeacher,
+  getStudentPercentage,
   submitAttendanceForClass,
 };
