@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const { getScheduleTeacher, getScheduleStudent, getProfileDetails } = require("./../controller/controller");
+const {
+  getClassStudentRollNos,
+  getProfileDetails,
+  getScheduleStudent,
+  getScheduleTeacher,
+} = require("./../controller/controller");
 const { changePassword } = require("./../controller/changePassword.controller.js");
 const { loginHandler } = require("./../controller/login.controller");
 
@@ -32,6 +37,7 @@ router.get("/getFacultyAttendanceHistoryData/:id", debug);
 router.get("/getStudentAttendanceHistoryData/:id", debug);
 router.get("/getStudentPercentage/:id", debug);
 
+router.get("/getClassStudentRollNos/:classID", getClassStudentRollNos);
 router.get("/getProfileDetails/:type/:id", getProfileDetails);
 router.get("/getScheduleStudent/:id", getScheduleStudent);
 router.get("/getScheduleTeacher/:teacherID", getScheduleTeacher);

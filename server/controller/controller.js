@@ -172,8 +172,24 @@ async function getScheduleStudent(req, res) {
   }
 }
 
+async function getClassStudentRollNos(req, res) {
+  try {
+    const classID = req.params.classID.toLowerCase();
+    const klass = await Class.findOne({ classID: classID });
+    if (klass) {
+      res.json(klass.studentRollNumbers);
+    } else {
+      classNotFound(classID, res);
+      return;
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.toString() });
+  }
+}
+
 module.exports = {
+  getClassStudentRollNos,
   getProfileDetails,
-  getScheduleTeacher,
   getScheduleStudent,
+  getScheduleTeacher,
 };
