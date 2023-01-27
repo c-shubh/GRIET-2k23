@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,14 +6,20 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ShadowPropTypesIOS,
 } from "react-native";
-const DeviceList = () => {
-  const [devices, setDevices] = useState([
-    { name: "Device 1", checked: false, range: "Short" },
-    { name: "Device 2", checked: true, range: "Medium" },
-    { name: "Device 3", checked: false, range: "Long" },
-    // more devices
-  ]);
+
+const DeviceList = (props) => {
+  console.log(props.toString() + "hiiyy");
+  
+  const devices = props.devices;
+
+  useEffect(() => {
+
+    if(props.shouldSubmit) {
+      // send post request
+    }
+  }, [props.shouldSubmit])
 
   const toggleCheck = (index) => {
     Alert.alert(
@@ -30,7 +36,7 @@ const DeviceList = () => {
           onPress: () => {
             const updatedDevices = [...devices];
             updatedDevices[index].checked = !updatedDevices[index].checked;
-            setDevices(updatedDevices);
+            props.setDevicesOuter(updatedDevices);
           },
         },
       ],
