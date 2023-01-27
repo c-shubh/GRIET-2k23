@@ -8,11 +8,12 @@ import getCurrentWeekday from "../utils/day";
 import CurrentPeriodCard from "./components/currentPeriodCard";
 import currentPeriodHelper from "../utils/currentperiodhelper";
 import findCurrentPeriod from "../utils/currentPeriod";
-
+import SimpleDialog from "./components/dialog";
 const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");
   const [rollNumber, setRollNumber] = useState("123456");
+  const [dialogVisible, setDialogVisible] = useState(false);
   const [timetable, setTimetable] = useState([
     // {
     //   day: "Monday",
@@ -23,6 +24,7 @@ const StudentDashboard = () => {
     // },
   ]);
   const [currentPeriod, setcurrentPeriod] = useState("No Class");
+  const [bottomText, setBottomText] = useState("");
   useEffect(() => {
     (async function () {
       const id = await AsyncStorage.getItem("loginId");
@@ -48,6 +50,12 @@ const StudentDashboard = () => {
         });
       });
 
+      finalClassess.push({
+        name: "End of Day",
+        time: " 3:55 PM",
+        helperTime: "15:55",
+      });
+
       setTimetable([
         {
           day: getCurrentWeekday(),
@@ -58,9 +66,8 @@ const StudentDashboard = () => {
         "hitesh" + findCurrentPeriod(finalClassess.map((e) => e.helperTime))
       );
       setcurrentPeriod(
-        finalClassess[
-          findCurrentPeriod(finalClassess.map((e) => e.helperTime))
-        ].name
+        finalClassess[findCurrentPeriod(finalClassess.map((e) => e.helperTime))]
+          .name
       );
     })();
   }, []);
@@ -88,7 +95,15 @@ const StudentDashboard = () => {
             </View>
           );
         })}
-        <CurrentPeriodCard period={currentPeriod} />
+        <CurrentPeriodCard
+          period={currentPeriod}
+          onMarkAttendancePress={() => {
+            if (currentPeriod == "End of Day") {
+              setBottomText("failed, reason: day already ended");
+            } else setBottomText("Attendance Marked!");
+          }}
+        />
+        <Text>{bottomText}</Text>
       </ScrollView>
     </View>
   );
