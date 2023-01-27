@@ -13,10 +13,15 @@ const Query = require("mongoose").Query;
 
 /* ------------------------------- Functions -------------------------------- */
 
+function getDayOfWeek() {
+  // monday: 0, ... sunday: 6
+  return (dayjs().day() - 1) % 7;
+}
+
 async function getStudentDetails(req, res) {
   try {
     const rollNo = req.params.id.toLowerCase();
-    const /** @type{Query} */ student = await Student.findOne({ rollNo: rollNo });
+    const student = await Student.findOne({ rollNo: rollNo });
     if (student) {
       res.json({
         rollNo: rollNo.toUpperCase(), // rollNo is to be displayed in uppercase
@@ -37,7 +42,7 @@ async function getStudentDetails(req, res) {
 async function getTeacherDetails(req, res) {
   try {
     const teacherID = req.params.id.toLowerCase();
-    const /** @type{Query} */ teacher = await Teacher.findOne({ teacherID: teacherID });
+    const teacher = await Teacher.findOne({ teacherID: teacherID });
     if (teacher) {
       res.json({
         teacherID: teacherID,
@@ -70,73 +75,94 @@ async function getProfileDetails(req, res) {
   }
 }
 
-const getScheduleTeacher = async (req, res) => {
+async function getScheduleTeacher(req, res) {
   try {
-    const { name, periodIDs, teacherID } = await Teacher.findOne(req.params);
-    if (periodIDs) {
-      const teacherSchedule = {
-        monday: periodIDs[0],
-        tuesday: periodIDs[1],
-        wednesday: periodIDs[2],
-        thursday: periodIDs[3],
-        friday: periodIDs[4],
-        saturday: periodIDs[5],
-      };
+    const teacherID = req.params.teacherID.toLowerCase();
+    const teacher = await Teacher.findOne({ teacherID: teacherID });
+    if (teacher) {
+      const dayOfWeek = getDayOfWeek();
+      const /** @type{Array<string> } */ periods = teacher.periodIDs[dayOfWeek];
 
-      if (teacherSchedule) {
-        res.status(201).json({ name: name, teacherID: teacherID, schedule: teacherSchedule });
-      } else {
-        res.status(400).json({ msg: "schedule not found" });
+      const classSchedules = [];
+      for (const classID of periods) {
+        classSchedules.push(...(await getClassSchedule(classID, null)));
       }
+
+      res.json(classSchedules.filter((classSchedule) => classSchedule.teacherID === teacherID).sort((a, b) => b - a));
+    } else {
+      teacherNotFound(teacherID, res);
+      return;
     }
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ error: err.toString() });
   }
-};
+}
+
+async function getClassSchedule(classID, res) {
+  try {
+    const studentClass = await Class.findOne({ classID: classID });
+    if (studentClass) {
+      // monday: 0, ... sunday: 6
+      const dayOfWeek = getDayOfWeek();
+      const /** @type{Array<string> } */ periods = studentClass.periodDays[dayOfWeek];
+
+      // start time 9:00 am
+      let time = dayjs().startOf("date").hour(9).minute(0);
+      let toReturn = [];
+
+      for (let i = 0; i < periods.length; i++) {
+        const subject = periods[i];
+        toReturn.push({
+          subject: subject,
+          start: time.toDate(),
+          branch: studentClass.branch,
+          classID: classID,
+          section: studentClass.section,
+        });
+
+        if (subject === "Break") {
+          time = time.add(10, "minute");
+        } else if (subject === "Lunch") {
+          time = time.add(45, "minute");
+        } else {
+          const periodID = generatePeriodID(classID, subject);
+          const period = await Period.findOne({ periodID: periodID });
+          if (period) {
+            toReturn[i].teacherID = period.teacherID;
+            toReturn[i].periodID = period.periodID;
+
+            const periodLength = period.get("length");
+            time = time.add(periodLength, "hour");
+            if (i <= 1 && periodLength >= 2) {
+              time = time.add(10, "minute"); // since this lab covers break
+            }
+          } else {
+            periodNotFound(periodID, res);
+            return;
+          }
+        }
+      }
+      if (res === null) return toReturn;
+      else res.json(toReturn);
+    } else {
+      if (res === null) {
+        return null;
+      } else {
+        classNotFound(classID, res);
+      }
+      return;
+    }
+  } catch (err) {
+    if (res !== null) res.status(500).json({ error: err.toString() });
+  }
+}
 
 async function getScheduleStudent(req, res) {
   try {
     const rollNo = req.params.id.toLowerCase();
-    const /** @type{Query} */ student = await Student.findOne({ rollNo: rollNo });
+    const student = await Student.findOne({ rollNo: rollNo });
     if (student) {
-      const /** @type{Query} */ studentClass = await Class.findOne({ classID: student.classID });
-      if (studentClass) {
-        // monday: 0, ... sunday: 6
-        const dayOfWeek = (dayjs().day() - 1) % 7;
-        const /** @type{Array<string> } */ periods = studentClass.periodDays[dayOfWeek];
-
-        // start time 9:00 am
-        let time = dayjs().startOf("date").hour(9).minute(0);
-        let toReturn = [];
-
-        for (let i = 0; i < periods.length; i++) {
-          const subject = periods[i];
-          toReturn.push({ subject: subject, start: time.toDate() });
-
-          if (subject === "Break") {
-            time = time.add(10, "minute");
-          } else if (subject === "Lunch") {
-            time = time.add(45, "minute");
-          } else {
-            const periodID = generatePeriodID(student.classID, subject);
-            const period = await Period.findOne({ periodID: periodID });
-            if (period) {
-              const periodLength = period.get("length");
-              time = time.add(periodLength, "hour");
-              if (i <= 1 && periodLength >= 2) {
-                time = time.add(10, "minute"); // since this lab covers break
-              }
-            } else {
-              periodNotFound(periodID, res);
-              return;
-            }
-          }
-        }
-        res.json(toReturn);
-      } else {
-        classNotFound(student.classID, res);
-        return;
-      }
+      return getClassSchedule(student.classID, res);
     } else {
       studentNotFound(rollNo, res);
       return;
