@@ -1,10 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import { View, Text, ScrollView, Button } from "react-native";
-import {
-  NativeModules,
-  DeviceEventEmitter,
-} from "react-native";
+import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
 function DeviceList({ devices }) {
   if (devices.length === 0) {
@@ -63,11 +60,6 @@ function NearbyDevicesScreen({ onStartAttendance }) {
                     console.log("hi");
 
                     DeviceEventEmitter.addListener("NearbyDeviceFound", (e) => {
-                      console.log(e);
-                      console.log("hiii");
-                      setDevices([...devices, e]);
-                    });
-                    DeviceEventEmitter.addListener("AdvertiserMessage", (e) => {
                       console.log(e);
                       console.log("hiii");
                       setDevices([...devices, e]);

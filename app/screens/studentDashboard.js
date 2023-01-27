@@ -9,6 +9,8 @@ import CurrentPeriodCard from "./components/currentPeriodCard";
 import currentPeriodHelper from "../utils/currentperiodhelper";
 import findCurrentPeriod from "../utils/currentPeriod";
 import SimpleDialog from "./components/dialog";
+import { NativeModules, DeviceEventEmitter } from "react-native";
+import { requestLocationPermission } from "../permission";
 const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");
@@ -97,10 +99,43 @@ const StudentDashboard = () => {
         })}
         <CurrentPeriodCard
           period={currentPeriod}
-          onMarkAttendancePress={() => {
+          onMarkAttendancePress={async () => {
             if (currentPeriod == "End of Day") {
               setBottomText("failed, reason: day already ended");
-            } else setBottomText("Attendance Marked!");
+            } else {
+              const id = await AsyncStorage.getItem("loginId");
+              NativeModules.ContactTracerModule.setUserId(id).then(
+                (userId) => {
+                  NativeModules.ContactTracerModule.initialize()
+                    .then((result) => {
+                      return NativeModules.ContactTracerModule.isBLEAvailable();
+                    })
+
+                    .then((isBLEAvailable) => {
+                      if (isBLEAvailable) {
+                        console.log("ble avail");
+                        // BLE is available, continue requesting Location Permission
+                        return requestLocationPermission();
+                      } else {
+                        // BLE is not available, don't do anything furthur since BLE is required
+                        console.log("ble not avail");
+                      }
+                    })
+
+                    .then((locAvi) => {
+                      return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
+                    })
+                    .then(() => {
+                      console.log("tuend on");
+                    })
+
+                    .then((e) => {
+                      NativeModules.ContactTracerModule.enableTracerService();
+                    });
+                }
+              );
+              setBottomText("Attendance Request Sent!");
+            }
           }}
         />
         <Text>{bottomText}</Text>
