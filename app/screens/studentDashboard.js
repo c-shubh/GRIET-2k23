@@ -5,6 +5,10 @@ import CurrentDay from "./components/currentDay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import convertDateTimeIsoToTime from "../utils/utils";
 import getCurrentWeekday from "../utils/day";
+import CurrentPeriodCard from "./components/currentPeriodCard";
+import currentPeriodHelper from "../utils/currentperiodhelper";
+import findCurrentPeriod from "../utils/currentPeriod";
+
 const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");
@@ -18,7 +22,7 @@ const StudentDashboard = () => {
     //   ],
     // },
   ]);
-
+  const [currentPeriod, setcurrentPeriod] = useState("No Class");
   useEffect(() => {
     (async function () {
       const id = await AsyncStorage.getItem("loginId");
@@ -40,14 +44,24 @@ const StudentDashboard = () => {
         finalClassess.push({
           name: period.subject,
           time: convertDateTimeIsoToTime(period.start),
+          helperTime: currentPeriodHelper(period.start),
         });
       });
+
       setTimetable([
         {
           day: getCurrentWeekday(),
           classes: finalClassess,
         },
       ]);
+      console.log(
+        "hitesh" + findCurrentPeriod(finalClassess.map((e) => e.helperTime))
+      );
+      setcurrentPeriod(
+        finalClassess[
+          findCurrentPeriod(finalClassess.map((e) => e.helperTime))
+        ].name
+      );
     })();
   }, []);
 
@@ -68,13 +82,13 @@ const StudentDashboard = () => {
               {day.classes.map((classInfo, classIndex) => (
                 <View key={classIndex} style={styles.classContainer}>
                   <Text style={styles.classText}>{classInfo.name}</Text>
-                  <Text style={styles.classText}>{classInfo.time}</Text>
+                  <Text style={styles.classText}>{classInfo.helperTime}</Text>
                 </View>
               ))}
             </View>
           );
         })}
-        <CurrentPeriod />
+        <CurrentPeriodCard period={currentPeriod} />
       </ScrollView>
     </View>
   );
