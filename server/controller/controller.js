@@ -15,6 +15,8 @@ const Query = require("mongoose").Query;
 
 function getDayOfWeek() {
   // monday: 0, ... sunday: 6
+  // friday (hardcoded because can't test the app on saturday (holiday))
+  return 4;
   return (dayjs().day() - 1) % 7;
 }
 
