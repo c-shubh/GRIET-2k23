@@ -2,7 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "../screens/splashScreen";
 import LoginScreen from "../screens/loginScreen";
 import ChooseTeacherOrStudent from "../screens/chooseTeacherOrStudent";
-
+import TeacherDashboard from "../screens/teacherDashBoard";
+import StudentDashboard from "../screens/studentDashboard";
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
@@ -22,6 +23,16 @@ function MyStack() {
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="StudentDashboard"
+        component={StudentDashboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TeacherDashboard"
+        component={TeacherDashboard}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -6,7 +6,7 @@ const ChooseTeacherOrStudent = ({ navigation }) => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate("LoginScreen")}
+        onPress={() => navigation.navigate("LoginScreen", {type: "Teacher"})}
       >
         <Image
           source={require("../assets/teacher.png")}
@@ -17,7 +17,7 @@ const ChooseTeacherOrStudent = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate("LoginScreen")}
+        onPress={() => navigation.navigate("LoginScreen", {type: "Student"})}
       >
         <Image
           source={require("../assets/student.png")}
