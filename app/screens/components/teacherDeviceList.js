@@ -18,6 +18,10 @@ const DeviceList = (props) => {
 
     if(props.shouldSubmit) {
       // send post request
+      // periodId
+      // teacherId
+      // classId
+      
     }
   }, [props.shouldSubmit])
 

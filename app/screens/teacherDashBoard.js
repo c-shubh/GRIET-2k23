@@ -24,10 +24,11 @@ const TeacherDashboard = ({ navigation }) => {
   ]);
   const [currentPeriod, setcurrentPeriod] = useState("No Class");
   const [currentClassId, setCurrentClassID] = useState("");
+  const [teacherId, setTeacherId] = useState("");
   useEffect(() => {
     (async function () {
       const id = await AsyncStorage.getItem("loginId");
-
+      setTeacherId(id);
       var timetableData = await fetch(
         `https://lionfish-app-t784j.ondigitalocean.app/api/getScheduleTeacher/${id}`
       );
@@ -100,6 +101,8 @@ const TeacherDashboard = ({ navigation }) => {
             } else {
               navigation.navigate("AttendanceScreen", {
                 classId: currentClassId,
+                teacherId: teacherId,
+                periodId: currentPeriod,
               });
             }
           }}
