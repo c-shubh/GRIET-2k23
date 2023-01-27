@@ -1,21 +1,24 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Button } from "react-native";
 import { StyleSheet } from "react-native";
 const StudentDashboard = ({ route }) => {
   const [studentApiDetails, setstudentApiDetails] = useState({});
-  useEffect(async () => {
-    const id = await AsyncStorage.getItem("loginId");
-    var data = await fetch(
-      `https://lionfish-app-t784j.ondigitalocean.app/api/getProfileDetails/student/${id}`
-    );
-    data = data.json();
-    console.log(data);
+  useEffect(() => {
+    (async function () {
+      const id = await AsyncStorage.getItem("loginId");
+      console.log("vk_12 " + id);
+      var data = await fetch(
+        `https://lionfish-app-t784j.ondigitalocean.app/api/getProfileDetails/student/${id}`
+      );
+      data = await data.json();
+      setstudentApiDetails(data);
+    })();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome, studentName!</Text>
+      <Text style={styles.welcomeText}>Welcome, {studentApiDetails.name}</Text>
       <Button
         title="View Attendance History"
         onPress={() => {
