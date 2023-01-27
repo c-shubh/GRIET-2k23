@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import DeviceList from "./teacherDeviceList";
 
 const AttendanceButton = (props) => {
   const [attendanceStarted, setAttendanceStarted] = useState(false);
@@ -21,6 +22,7 @@ const AttendanceButton = (props) => {
           {attendanceStarted ? "Stop Attendance" : "Start Attendance"}
         </Text>
       </TouchableOpacity>
+    
     </View>
   );
 };

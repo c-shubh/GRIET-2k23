@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, Button } from "react-native";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
@@ -7,8 +7,33 @@ import TeacherDevicesList from "./components/teacherDeviceList";
 import AttendanceButton from "./components/startAttendance";
 
 function NearbyDevicesScreen({ route }) {
-  const [devices, setDevices] = useState([]);
-console.log("hitesh" + route.params.classId);
+  const [devices, setDevices] = useState([
+    //    { name: "Device 1", checked: false, range: "Short" },
+    //   { name: "Device 2", checked: true, range: "Medium" },
+    //  { name: "Device 3", checked: false, range: "Long" },
+  ]);
+
+  const classId = route.params.classId;
+  useEffect(() => {
+    fetch(
+      `https://lionfish-app-t784j.ondigitalocean.app/api/getClassStudentRollNos/${classId}`
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setDevices(
+          data.map((e) => {
+            return {
+              name: e,
+              checked: false,
+              range: "",
+            };
+          })
+        );
+      });
+  }, []);
+  console.log("hitesh" + route.params.classId);
   return (
     <View style={{ flex: 1 }}>
       <View style={{ padding: 10 }}>
@@ -44,7 +69,19 @@ console.log("hitesh" + route.params.classId);
                     DeviceEventEmitter.addListener("NearbyDeviceFound", (e) => {
                       console.log(e);
                       console.log("hiii");
-                      setDevices([...devices, e]);
+                      if (e.name) {
+                        var updatedDevices = [...devices];
+
+                        for (var device of updatedDevices) {
+                          console.log(device.name);
+                          if (device.name == e.name) {
+                            console.log(device.name + "hwlel");
+                            device.range = e.rssi.toString();
+                            device.checked = true;
+                          }
+                        }
+                        setDevices(updatedDevices);
+                      }
                     });
                   }
                 })
@@ -59,7 +96,14 @@ console.log("hitesh" + route.params.classId);
           }}
         />
       </View>
-      <TeacherDevicesList />
+      <TeacherDevicesList
+        classId={classId}
+        shouldSubmit={false}
+        setDevicesOuter={(dev) => {
+          setDevices(dev);
+        }}
+        devices={devices}
+      />
     </View>
   );
 }
