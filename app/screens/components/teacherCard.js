@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Card } from "@rneui/base";
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
@@ -18,49 +19,17 @@ const TeacherCard = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.cardContent}>
-          <Text style={styles.title}>Teacher Name: {teacherData.name}</Text>
-          <Text style={styles.subtitle}>Username: {teacherData.teacherID}</Text>
-        </View>
-      </View>
-    </View>
+    <Card>
+      <Text style={styles.infoText}>Teacher Name: {teacherData.name}</Text>
+      <Text style={styles.infoText}>Username: {teacherData.teacherID}</Text>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  card: {
-    width: "80%",
-    height: 200,
-    backgroundColor: "white",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 20,
-  },
-  cardContent: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#666",
+  infoText: {
+    fontSize: 16,
+    marginBottom: 5,
   },
 });
 

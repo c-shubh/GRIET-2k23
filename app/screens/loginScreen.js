@@ -80,7 +80,11 @@ const LoginScreen = ({ navigation, route }) => {
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Enter Roll number"
+          placeholder={
+            route.params.type === "Teacher"
+              ? "Enter Teacher ID"
+              : "Enter Roll no"
+          }
           value={id}
           onChangeText={handleIdChange}
         />
