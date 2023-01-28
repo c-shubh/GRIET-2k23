@@ -8,15 +8,16 @@ import getCurrentWeekday from "../utils/day";
 import CurrentPeriodCard from "./components/currentPeriodCard";
 import currentPeriodHelper from "../utils/currentperiodhelper";
 import findCurrentPeriod from "../utils/currentPeriod";
-import SimpleDialog from "./components/dialog";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
 import * as LocalAuthentication from 'expo-local-authentication';
+import Popup from "./components/finalDialog";
+import DismissablePopup from "./components/finalDialog";
 const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");
   const [rollNumber, setRollNumber] = useState("123456");
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(true);
   const [timetable, setTimetable] = useState([
     // {
     //   day: "Monday",
@@ -28,6 +29,7 @@ const StudentDashboard = () => {
   ]);
   const [currentPeriod, setcurrentPeriod] = useState("No Class");
   const [bottomText, setBottomText] = useState("");
+  const [percent, setPercent] = useState(0);
   useEffect(() => {
     (async function () {
       const id = await AsyncStorage.getItem("loginId");
@@ -53,6 +55,11 @@ const StudentDashboard = () => {
         });
       });
 
+      var percent = await fetch(`https://lionfish-app-t784j.ondigitalocean.app/api/getStudentPercentage/${id}`)
+      percent =  (await percent.text()).toString()
+      setPercent(percent);
+
+
       finalClassess.push({
         name: "End of Day",
         time: " 3:55 PM",
@@ -77,11 +84,13 @@ const StudentDashboard = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Student Dashboard</Text>
+      <DismissablePopup text={bottomText} visible={dialogVisible} setVisible={(x) => setDialogVisible(x)}></DismissablePopup>
+            <Text style={styles.headerText}>Student Dashboard</Text>
       <View style={styles.studentInfoContainer}>
         <Text style={styles.infoText}>Student Name: {studentName}</Text>
         <Text style={styles.infoText}>Current Year: {currentYear}</Text>
         <Text style={styles.infoText}>Roll Number: {rollNumber}</Text>
+        <Text style={styles.infoText}>Attendance Percent {percent}%</Text>
       </View>
       <CurrentDay />
 
@@ -103,11 +112,13 @@ const StudentDashboard = () => {
           onMarkAttendancePress={async () => {
             if (currentPeriod == "End of Day") {
               setBottomText("failed, reason: day already ended");
+
             } else {
               const id = await AsyncStorage.getItem("loginId");
               const biometricSucc = await (await LocalAuthentication.authenticateAsync()).success;
               if(!biometricSucc)  {
                 setBottomText("biometric failed");
+                setDialogVisible(true);
                 return;
               }
               NativeModules.ContactTracerModule.setUserId(id).then(
@@ -141,6 +152,7 @@ const StudentDashboard = () => {
                     
                     .then((e) => {
               setBottomText("Attendance Request Sent!");
+              setDialogVisible(true);
                     });
                 }
               );

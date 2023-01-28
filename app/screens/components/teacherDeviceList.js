@@ -21,6 +21,27 @@ const DeviceList = (props) => {
       // periodId
       // teacherId
       // classId
+      var periodId = props.periodId;
+      var teacherId = props.teacherId;
+      var classID = props.classId;
+      var studentRollNumbers = {};
+
+      devices.forEach((e) => {
+        studentRollNumbers[`${e.name}`] = e.checked; 
+      });
+      fetch("https://lionfish-app-t784j.ondigitalocean.app/api/submitAttendanceForClass",
+        {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          periodID: periodId,
+          teacherID: teacherId,
+          classID: classID,
+          date: Date.now(),
+          studentRollNumbers: studentRollNumbers
+        }),
+      }
+      )
       
     }
   }, [props.shouldSubmit])

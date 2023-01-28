@@ -12,7 +12,7 @@ function NearbyDevicesScreen({ route }) {
     //   { name: "Device 2", checked: true, range: "Medium" },
     //  { name: "Device 3", checked: false, range: "Long" },
   ]);
-
+  const [submit, setSubmit] = useState(false);
   const classId = route.params.classId;
   useEffect(() => {
     fetch(
@@ -93,6 +93,7 @@ function NearbyDevicesScreen({ route }) {
           }}
           onStopped={() => {
             NativeModules.ContactTracerModule.disableTracerService();
+           setSubmit(true); 
           }}
         />
       </View>
@@ -100,7 +101,7 @@ function NearbyDevicesScreen({ route }) {
         classId={classId}
         teacherId={route.params.teacherId}
         periodId={route.params.periodId}
-        shouldSubmit={false}
+        shouldSubmit={submit}
         setDevicesOuter={(dev) => {
           setDevices(dev);
         }}
