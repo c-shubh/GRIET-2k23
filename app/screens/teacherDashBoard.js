@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Card } from "@rneui/base";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import CurrentPeriod from "./components/currentPeriod";
 import CurrentDay from "./components/currentDay";
@@ -80,35 +81,37 @@ const TeacherDashboard = ({ navigation }) => {
       <TeacherCard />
       <CurrentDay />
 
-      <ScrollView style={styles.timetableContainer}>
-        {timetable.map((day, index) => {
-          return (
-            <View key={index} style={styles.dayContainer}>
-              {day.classes.map((classInfo, classIndex) => (
-                <View key={classIndex} style={styles.classContainer}>
-                  <Text style={styles.classText}>
-                    {classInfo.name} - {classInfo.class}-{classInfo.section}
-                  </Text>
-                  <Text style={styles.classText}>{classInfo.startTime}</Text>
-                </View>
-              ))}
-            </View>
-          );
-        })}
-        <CurrentPeriodCard
-          period={currentPeriod}
-          onMarkAttendancePress={async () => {
-            if (currentPeriod == "End of Day") {
-              setBottomText("failed, reason: day already ended");
-            } else {
-              navigation.navigate("AttendanceScreen", {
-                classId: currentClassId,
-                teacherId: teacherId,
-                periodId: currentPeriod,
-              });
-            }
-          }}
-        />
+      <ScrollView>
+        <Card className="border-2" containerStyle={{ marginTop: 0 }}>
+          {timetable.map((day, index) => {
+            return (
+              <View key={index} style={styles.dayContainer}>
+                {day.classes.map((classInfo, classIndex) => (
+                  <View key={classIndex} style={styles.classContainer}>
+                    <Text style={styles.classText}>
+                      {classInfo.name} - {classInfo.class}-{classInfo.section}
+                    </Text>
+                    <Text style={styles.classText}>{classInfo.startTime}</Text>
+                  </View>
+                ))}
+              </View>
+            );
+          })}
+          <CurrentPeriodCard
+            period={currentPeriod}
+            onMarkAttendancePress={async () => {
+              if (currentPeriod == "End of Day") {
+                setBottomText("failed, reason: day already ended");
+              } else {
+                navigation.navigate("AttendanceScreen", {
+                  classId: currentClassId,
+                  teacherId: teacherId,
+                  periodId: currentPeriod,
+                });
+              }
+            }}
+          />
+        </Card>
       </ScrollView>
     </View>
   );
@@ -126,36 +129,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
-  studentInfoContainer: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-    elevation: 1,
-  },
-  infoText: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  timetableHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  timetableContainer: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 5,
-    elevation: 1,
-  },
   dayContainer: {
     marginBottom: 10,
-  },
-  dayText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
   },
   classContainer: {
     flexDirection: "row",
