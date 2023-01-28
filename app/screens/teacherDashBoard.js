@@ -76,7 +76,7 @@ const TeacherDashboard = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Student Dashboard</Text>
+      <Text style={styles.headerText}>Teacher Dashboard</Text>
       <TeacherCard />
       <CurrentDay />
 
@@ -86,7 +86,9 @@ const TeacherDashboard = ({ navigation }) => {
             <View key={index} style={styles.dayContainer}>
               {day.classes.map((classInfo, classIndex) => (
                 <View key={classIndex} style={styles.classContainer}>
-                  <Text style={styles.classText}>{classInfo.name}</Text>
+                  <Text style={styles.classText}>
+                    {classInfo.name} - {classInfo.class}-{classInfo.section}
+                  </Text>
                   <Text style={styles.classText}>{classInfo.startTime}</Text>
                 </View>
               ))}

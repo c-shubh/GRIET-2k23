@@ -1,18 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
-import CurrentPeriod from "./components/currentPeriod";
-import CurrentDay from "./components/currentDay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import convertDateTimeIsoToTime from "../utils/utils";
-import getCurrentWeekday from "../utils/day";
-import CurrentPeriodCard from "./components/currentPeriodCard";
-import currentPeriodHelper from "../utils/currentperiodhelper";
-import findCurrentPeriod from "../utils/currentPeriod";
-import { NativeModules, DeviceEventEmitter } from "react-native";
-import { requestLocationPermission } from "../permission";
+import { Card } from "@rneui/base";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import * as LocalAuthentication from "expo-local-authentication";
-import Popup from "./components/finalDialog";
+import React, { useEffect, useState } from "react";
+import {
+  NativeModules,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { requestLocationPermission } from "../permission";
+import findCurrentPeriod from "../utils/currentPeriod";
+import currentPeriodHelper from "../utils/currentperiodhelper";
+import getCurrentWeekday from "../utils/day";
+import convertDateTimeIsoToTime from "../utils/utils";
+import CurrentDay from "./components/currentDay";
+import CurrentPeriodCard from "./components/currentPeriodCard";
 import DismissablePopup from "./components/finalDialog";
+dayjs.extend(customParseFormat);
 const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");

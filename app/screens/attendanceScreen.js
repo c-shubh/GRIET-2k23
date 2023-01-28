@@ -74,7 +74,9 @@ function NearbyDevicesScreen({ route }) {
 
                         for (var device of updatedDevices) {
                           console.log(device.name);
-                          if (device.name == e.name) {
+                          if (
+                            device.name.toLowerCase() == e.name.toLowerCase()
+                          ) {
                             console.log(device.name + "hwlel");
                             device.range = e.rssi.toString();
                             device.checked = true;
@@ -93,7 +95,7 @@ function NearbyDevicesScreen({ route }) {
           }}
           onStopped={() => {
             NativeModules.ContactTracerModule.disableTracerService();
-           setSubmit(true); 
+            setSubmit(true);
           }}
         />
       </View>
