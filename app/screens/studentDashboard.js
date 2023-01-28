@@ -24,7 +24,7 @@ const StudentDashboard = () => {
   const [studentName, setStudentName] = useState("John Doe");
   const [currentYear, setCurrentYear] = useState("2022");
   const [rollNumber, setRollNumber] = useState("123456");
-  const [dialogVisible, setDialogVisible] = useState(true);
+  const [dialogVisible, setDialogVisible] = useState(false);
   const [timetable, setTimetable] = useState([
     // {
     //   day: "Monday",
