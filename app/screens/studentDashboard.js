@@ -10,7 +10,7 @@ import currentPeriodHelper from "../utils/currentperiodhelper";
 import findCurrentPeriod from "../utils/currentPeriod";
 import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
-import * as LocalAuthentication from 'expo-local-authentication';
+import * as LocalAuthentication from "expo-local-authentication";
 import Popup from "./components/finalDialog";
 import DismissablePopup from "./components/finalDialog";
 const StudentDashboard = () => {
@@ -55,10 +55,11 @@ const StudentDashboard = () => {
         });
       });
 
-      var percent = await fetch(`https://lionfish-app-t784j.ondigitalocean.app/api/getStudentPercentage/${id}`)
-      percent =  (await percent.text()).toString()
+      var percent = await fetch(
+        `https://lionfish-app-t784j.ondigitalocean.app/api/getStudentPercentage/${id}`
+      );
+      percent = (await percent.text()).toString();
       setPercent(percent);
-
 
       finalClassess.push({
         name: "End of Day",
@@ -84,82 +85,91 @@ const StudentDashboard = () => {
 
   return (
     <View style={styles.container}>
-      <DismissablePopup text={bottomText} visible={dialogVisible} setVisible={(x) => setDialogVisible(x)}></DismissablePopup>
-            <Text style={styles.headerText}>Student Dashboard</Text>
-      <View style={styles.studentInfoContainer}>
+      <DismissablePopup
+        text={bottomText}
+        visible={dialogVisible}
+        setVisible={(x) => setDialogVisible(x)}
+      ></DismissablePopup>
+      <Text className="text-lg font-bold text-center">Student Dashboard</Text>
+      <Card>
         <Text style={styles.infoText}>Student Name: {studentName}</Text>
         <Text style={styles.infoText}>Current Year: {currentYear}</Text>
         <Text style={styles.infoText}>Roll Number: {rollNumber}</Text>
         <Text style={styles.infoText}>Attendance Percent {percent}%</Text>
-      </View>
+      </Card>
       <CurrentDay />
 
-      <ScrollView style={styles.timetableContainer}>
-        {timetable.map((day, index) => {
-          return (
-            <View key={index} style={styles.dayContainer}>
-              {day.classes.map((classInfo, classIndex) => (
-                <View key={classIndex} style={styles.classContainer}>
-                  <Text style={styles.classText}>{classInfo.name}</Text>
-                  <Text style={styles.classText}>{classInfo.helperTime}</Text>
-                </View>
-              ))}
-            </View>
-          );
-        })}
-        <CurrentPeriodCard
-          period={currentPeriod}
-          onMarkAttendancePress={async () => {
-            if (currentPeriod == "End of Day") {
-              setBottomText("failed, reason: day already ended");
-
-            } else {
-              const id = await AsyncStorage.getItem("loginId");
-              const biometricSucc = await (await LocalAuthentication.authenticateAsync()).success;
-              if(!biometricSucc)  {
-                setBottomText("biometric failed");
-                setDialogVisible(true);
-                return;
-              }
-              NativeModules.ContactTracerModule.setUserId(id).then(
-                (userId) => {
-                  NativeModules.ContactTracerModule.initialize()
-                    .then((result) => {
-                      return NativeModules.ContactTracerModule.isBLEAvailable();
-                    })
-
-                    .then((isBLEAvailable) => {
-                      if (isBLEAvailable) {
-                        console.log("ble avail");
-                        // BLE is available, continue requesting Location Permission
-                        return requestLocationPermission();
-                      } else {
-                        // BLE is not available, don't do anything furthur since BLE is required
-                        console.log("ble not avail");
-                      }
-                    })
-
-                    .then((locAvi) => {
-                      return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
-                    })
-                    .then(() => {
-                      console.log("tuend on");
-                    })
-
-                    .then((e) => {
-                      NativeModules.ContactTracerModule.enableTracerService();
-                    })
-                    
-                    .then((e) => {
-              setBottomText("Attendance Request Sent!");
-              setDialogVisible(true);
-                    });
+      <ScrollView>
+        <Card className="border-2" containerStyle={{ marginTop: 0 }}>
+          {timetable.map((day, index) => {
+            return (
+              <View key={index} style={styles.dayContainer}>
+                {day.classes.map((classInfo, classIndex) => (
+                  <View key={classIndex} style={styles.classContainer}>
+                    <Text style={styles.classText}>{classInfo.name}</Text>
+                    <Text style={styles.classText}>
+                      {dayjs(classInfo.helperTime, "HH:mm").format("hh:mm a")}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            );
+          })}
+          <CurrentPeriodCard
+            period={currentPeriod}
+            onMarkAttendancePress={async () => {
+              if (currentPeriod == "End of Day") {
+                setBottomText("failed, reason: day already ended");
+              } else {
+                const id = await AsyncStorage.getItem("loginId");
+                const biometricSucc = await (
+                  await LocalAuthentication.authenticateAsync()
+                ).success;
+                if (!biometricSucc) {
+                  setBottomText("biometric failed");
+                  setDialogVisible(true);
+                  return;
                 }
-              );
-            }
-          }}
-        />
-        <Text>{bottomText}</Text>
+                NativeModules.ContactTracerModule.setUserId(id).then(
+                  (userId) => {
+                    NativeModules.ContactTracerModule.initialize()
+                      .then((result) => {
+                        return NativeModules.ContactTracerModule.isBLEAvailable();
+                      })
+
+                      .then((isBLEAvailable) => {
+                        if (isBLEAvailable) {
+                          console.log("ble avail");
+                          // BLE is available, continue requesting Location Permission
+                          return requestLocationPermission();
+                        } else {
+                          // BLE is not available, don't do anything furthur since BLE is required
+                          console.log("ble not avail");
+                        }
+                      })
+
+                      .then((locAvi) => {
+                        return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
+                      })
+                      .then(() => {
+                        console.log("tuend on");
+                      })
+
+                      .then((e) => {
+                        NativeModules.ContactTracerModule.enableTracerService();
+                      })
+
+                      .then((e) => {
+                        setBottomText("Attendance Request Sent!");
+                        setDialogVisible(true);
+                      });
+                  }
+                );
+              }
+            }}
+          />
+          <Text>{bottomText}</Text>
+        </Card>
       </ScrollView>
     </View>
   );
