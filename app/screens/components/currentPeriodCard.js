@@ -1,5 +1,6 @@
+import { Button } from "@rneui/themed";
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 const CurrentPeriodCard = ({
   period,
@@ -10,13 +11,12 @@ const CurrentPeriodCard = ({
     <View style={styles.cardContainer}>
       <Text style={styles.periodTitle}>{period}</Text>
       <View style={styles.buttonContainer}>
-  
-        <TouchableOpacity
-          style={styles.markAttendanceButton}
+        <Button
           onPress={onMarkAttendancePress}
+          buttonStyle={{ padding: 16, borderRadius: 5 }}
         >
-          <Text style={styles.buttonText}>Mark Attendance</Text>
-        </TouchableOpacity>
+          <Text style={styles.buttonText}>{"Mark\nAttendance"}</Text>
+        </Button>
       </View>
     </View>
   );

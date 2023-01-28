@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 const CurrentDay = () => {
-  const [currentDay, setCurrentDay] = useState('');
+  const [currentDay, setCurrentDay] = useState("");
 
   useEffect(() => {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     const currentDate = new Date();
     const day = days[currentDate.getUTCDay()];
     setCurrentDay(day);
@@ -13,19 +21,21 @@ const CurrentDay = () => {
 
   return (
     <View style={styles.currentDayContainer}>
-      <Text style={styles.currentDayText}>Timetable for: {currentDay}</Text>
+      <Text className="text-lg font-bold text-center mt-4">
+        Timetable for {currentDay}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   currentDayContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   currentDayText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
