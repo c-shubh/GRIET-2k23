@@ -1,0 +1,19 @@
+{
+  "name": "admin_dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "antd": "^5.1.6",
+    "mongodb": "^4.13.0",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-dom": "18.2.0"
+  }
+}
