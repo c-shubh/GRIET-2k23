@@ -1,0 +1,32 @@
+periodID,subject,classID,length,teacherID
+21itabacd,BACD,21ita,1,griet01
+21itabee,BEE,21ita,1,griet04
+21itaeeelab,EEE Lab,21ita,3,griet04
+21italibrary,Library,21ita,1,griet20
+21itaoopjlab,OOPJ Lab,21ita,3,griet02
+21itaoopj,OOPJ,21ita,1,griet02
+21itap&s,P&S,21ita,1,griet05
+21itardbmslab,RDBMS Lab,21ita,3,griet03
+21itardbms,RDBMS,21ita,1,griet03
+21itavalab,VA Lab,21ita,2,griet06
+21csitbdld,DLD,21csitb,1,griet16
+21csitbds,DS,21csitb,1,griet15
+21csitbdsgt,DSGT,21csitb,1,griet12
+21csitbdslab,DS Lab,21csitb,3,griet15
+21csitbjavalab,JAVA Lab,21csitb,3,griet13
+21csitblibrary,Library,21csitb,1,griet20
+21csitboop,OOP,21csitb,1,griet13
+21csitbsfds,SFDS,21csitb,1,griet14
+21csitbsmwrlab,SMwR Lab,21csitb,2,griet19
+21csitbsports,Sports,21csitb,1,griet18
+21csitbvalab,VA Lab,21csitb,2,griet17
+21csedbacd,BACD,21csed,1,griet09
+21csedbeee,BEEE,21csed,1,griet04
+21csedbeeelab(acsheds),BEEE Lab (AC Sheds),21csed,2,griet04
+21cseddsgt,DSGT,21csed,1,griet08
+21csedoopj,OOPJ,21csed,1,griet07
+21csedoopslab,OOPS Lab,21csed,3,griet07
+21csedp&s,P&S,21csed,1,griet10
+21csedpythonlab,Python Lab,21csed,2,griet11
+21csedpythontheory,Python Theory,21csed,1,griet11
+21csedvalab,VA Lab,21csed,2,griet21
