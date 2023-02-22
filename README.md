@@ -2,6 +2,7 @@
 
 _A smart and hassle free attendance management app for teachers, student and administrators._
 
+
 <p>
   <a href="https://github.com/c-shubh/GRIET-2k23/graphs/contributors">
     <img src="https://img.shields.io/github/contributors/c-shubh/GRIET-2k23" alt="contributors" />
@@ -18,8 +19,9 @@ _A smart and hassle free attendance management app for teachers, student and adm
   <a href="https://github.com/c-shubh/GRIET-2k23">
     <img src="https://img.shields.io/github/issues/c-shubh/GRIET-2k23" alt="open issues" />
   </a>
-  
 </p>
+
+![Smart Attendance](https://user-images.githubusercontent.com/88543171/220549782-aa43b922-0f32-407b-9c8e-6f748292883a.jpeg)
 
 # 💻 Tech Stack:
 
