@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { MongoClient } from "mongodb";
-
 export default async (req, res) => {
-  const client = new MongoClient("mongodb+srv://vikasrushi:MvRccS4SwCORzDj0@cluster0.uhsqdu9.mongodb.net/?retryWrites=true&w=majority", {
+  const url = process.env.NEXT_PUBLIC_MONGOURL;
+
+  const client = new MongoClient(url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   });
 
   try {
@@ -20,4 +21,3 @@ export default async (req, res) => {
     client.close();
   }
 };
-

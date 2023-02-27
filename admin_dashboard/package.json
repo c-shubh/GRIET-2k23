@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "antd": "^5.1.6",
+    "framer-motion": "^10.0.0",
     "mongodb": "^4.13.0",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-chartjs-2": "^4.3.1",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-loader-spinner": "^5.3.4"
   }
 }
