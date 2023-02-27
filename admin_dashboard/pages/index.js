@@ -10,7 +10,7 @@ import {
   Tag,
 } from "@chakra-ui/react";
 import { RotatingLines } from "react-loader-spinner";
-
+import BarGraph from "../components/BarGraph";
 const AttendanceTable = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,6 +23,14 @@ const AttendanceTable = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const filteredData = attendanceData.filter((attendance) => {
+    return (
+      attendance.studentRollNo.includes(filters.studentRollNo) &&
+      attendance.teacherID.includes(filters.teacherID) &&
+      attendance.classID.includes(filters.classID)
+    );
+  });
 
   const fetchData = async () => {
     setLoading(true);
@@ -37,27 +45,28 @@ const AttendanceTable = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const filteredData = attendanceData.filter((attendance) => {
-    return (
-      attendance.studentRollNo.includes(filters.studentRollNo) &&
-      attendance.teacherID.includes(filters.teacherID) &&
-      attendance.classID.includes(filters.classID)
-    );
-  });
-
-  const ChartDatebyPeriodID = (intialdata) => {
+  const chartinfo = (intialdata) => {
     if (intialdata == undefined) {
       return;
     }
+    let chartdata = {};
+    chartdata.absent = 0;
     const periodid = intialdata.periodID;
     const date = intialdata.date;
     const chartData = filteredData.filter((cur) => {
-      return cur.periodID === periodid && cur.date === date;
+      const res =
+        cur.periodID === periodid && cur.date === date && cur.present == false;
+      if (res) {
+        chartdata.absent += 1;
+      }
+      return res;
     });
-    return chartData;
-  };
 
-  ChartDatebyPeriodID(filteredData[0]);
+    chartdata.present = Math.abs(64 - chartdata.absent);
+    return chartdata;
+  };
+  let query = chartinfo(filteredData[0]);
+
   const columns = [
     {
       title: "Student Roll No",
@@ -165,6 +174,11 @@ const AttendanceTable = () => {
                   />
                 </Box>
               </Flex>
+              {query && (
+                <>
+                  <BarGraph present={query.present} absent={query.absent} />
+                </>
+              )}
               <Table dataSource={filteredData} columns={columns} />
             </Box>
           </Flex>
