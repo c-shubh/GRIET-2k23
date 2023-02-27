@@ -29,7 +29,6 @@ const AttendanceTable = () => {
     const req = await fetch("/api/hello");
     const res = await req.json();
     setAttendanceData(res);
-
     setLoading(false);
   };
 
@@ -38,7 +37,6 @@ const AttendanceTable = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  console.log(attendanceData);
   const filteredData = attendanceData.filter((attendance) => {
     return (
       attendance.studentRollNo.includes(filters.studentRollNo) &&
@@ -47,6 +45,19 @@ const AttendanceTable = () => {
     );
   });
 
+  const ChartDatebyPeriodID = (intialdata) => {
+    if (intialdata == undefined) {
+      return;
+    }
+    const periodid = intialdata.periodID;
+    const date = intialdata.date;
+    const chartData = filteredData.filter((cur) => {
+      return cur.periodID === periodid && cur.date === date;
+    });
+    return chartData;
+  };
+
+  ChartDatebyPeriodID(filteredData[0]);
   const columns = [
     {
       title: "Student Roll No",
