@@ -25,36 +25,34 @@ export default function Student() {
       <Button
         title="Mark "
         onPress={() => {
-          NativeModules.ContactTracerModule.setUserId(rollNum).then(
-            (userId) => {
-              NativeModules.ContactTracerModule.initialize()
-                .then((result) => {
-                  return NativeModules.ContactTracerModule.isBLEAvailable();
-                })
+          NativeModules.RnNDAModule.setUserId(rollNum).then((userId) => {
+            NativeModules.RnNDAModule.initialize()
+              .then((result) => {
+                return NativeModules.RnNDAModule.isBLEAvailable();
+              })
 
-                .then((isBLEAvailable) => {
-                  if (isBLEAvailable) {
-                    console.log("ble avail");
-                    // BLE is available, continue requesting Location Permission
-                    return requestLocationPermission();
-                  } else {
-                    // BLE is not available, don't do anything furthur since BLE is required
-                    console.log("ble not avail");
-                  }
-                })
+              .then((isBLEAvailable) => {
+                if (isBLEAvailable) {
+                  console.log("ble avail");
+                  // BLE is available, continue requesting Location Permission
+                  return requestLocationPermission();
+                } else {
+                  // BLE is not available, don't do anything furthur since BLE is required
+                  console.log("ble not avail");
+                }
+              })
 
-                .then((locAvi) => {
-                  return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
-                })
-                .then(() => {
-                  console.log("tuend on");
-                })
+              .then((locAvi) => {
+                return NativeModules.RnNDAModule.tryToTurnBluetoothOn();
+              })
+              .then(() => {
+                console.log("tuend on");
+              })
 
-                .then((e) => {
-                  NativeModules.ContactTracerModule.enableTracerService();
-                });
-            }
-          );
+              .then((e) => {
+                NativeModules.RnNDAModule.enableTracerService();
+              });
+          });
         }}
       ></Button>
     </View>

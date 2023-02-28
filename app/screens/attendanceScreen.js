@@ -41,10 +41,10 @@ function NearbyDevicesScreen({ route }) {
           onStarted={async () => {
             const id = await AsyncStorage.getItem("loginId");
 
-            NativeModules.ContactTracerModule.setUserId(id).then((userId) => {
-              NativeModules.ContactTracerModule.initialize()
+            NativeModules.RnNDAModule.setUserId(id).then((userId) => {
+              NativeModules.RnNDAModule.initialize()
                 .then((result) => {
-                  return NativeModules.ContactTracerModule.isBLEAvailable();
+                  return NativeModules.RnNDAModule.isBLEAvailable();
                 })
 
                 .then((isBLEAvailable) => {
@@ -59,7 +59,7 @@ function NearbyDevicesScreen({ route }) {
                 })
 
                 .then((locAvi) => {
-                  return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
+                  return NativeModules.RnNDAModule.tryToTurnBluetoothOn();
                 })
 
                 .then((sup) => {
@@ -89,12 +89,12 @@ function NearbyDevicesScreen({ route }) {
                 })
 
                 .then((e) => {
-                  NativeModules.ContactTracerModule.enableTracerService();
+                  NativeModules.RnNDAModule.enableTracerService();
                 });
             });
           }}
           onStopped={() => {
-            NativeModules.ContactTracerModule.disableTracerService();
+            NativeModules.RnNDAModule.disableTracerService();
             setSubmit(true);
           }}
         />

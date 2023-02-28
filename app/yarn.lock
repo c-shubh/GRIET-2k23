@@ -6275,10 +6275,10 @@
   dependencies:
     "glob" "^7.1.3"
 
-"rn-nearby-devices-android@^1.0.3":
-  "integrity" "sha512-QRYDBqE1OoRzhUGmqk9vR73m+tTq9FwZhahbkgSLkISFkihfC0XwKs7tyoLqKzEjUXv3YJeDNDM9prWWug3lsQ=="
-  "resolved" "https://registry.npmjs.org/rn-nearby-devices-android/-/rn-nearby-devices-android-1.0.3.tgz"
-  "version" "1.0.3"
+"rn-nearby-devices-android@^1.0.4":
+  "integrity" "sha512-cDzSX0knZ4edHorIVizGqdEw+qz66FSDty4AL/x5Zo91iC1fkWlhuaUdxNUynsb1ulc3j7vi4Fbkh51wnA0oYw=="
+  "resolved" "https://registry.npmjs.org/rn-nearby-devices-android/-/rn-nearby-devices-android-1.0.4.tgz"
+  "version" "1.0.4"
 
 "run-parallel@^1.1.9":
   "integrity" "sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA=="
