@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
-import { Dialog } from "@rneui/themed";
-import { TabRouter } from "@react-navigation/native";
+import { API_URL } from "../globals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const LoginScreen = ({ navigation, route }) => {
+import {
+  Button,
+  FormControl,
+  HStack,
+  Heading,
+  Input,
+  VStack,
+  themeColors,
+} from "native-base";
+import React, { useEffect, useState } from "react";
+
+export default function LoginScreen({ navigation, route }) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [visible1, setVisible1] = useState(false);
@@ -11,8 +19,10 @@ const LoginScreen = ({ navigation, route }) => {
     setId(text);
   };
   useEffect(() => {
+    console.log("async storage get loginType");
     AsyncStorage.getItem("loginType").then((res) => {
       if (res != null) {
+        console.log(`async storage got loginType: ${res}`);
         if (res == "Student") {
           navigation.navigate("StudentDashboard");
         } else {
@@ -38,18 +48,15 @@ const LoginScreen = ({ navigation, route }) => {
     console.log("handling");
     console.log("rpm" + route.params.type);
     console.log("hiotesh" + route.params.toString());
-    const req = await fetch(
-      "https://lionfish-app-t784j.ondigitalocean.app/api/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: route.params.type,
-          id: id,
-          password: password,
-        }),
-      }
-    );
+    const req = await fetch(`${API_URL}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: route.params.type,
+        id: id,
+        password: password,
+      }),
+    });
 
     const res = await req.json();
     console.log(res);
@@ -75,74 +82,49 @@ const LoginScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{route.params.type} Login</Text>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder={
-            route.params.type === "Teacher"
-              ? "Enter Teacher ID"
-              : "Enter Roll no"
-          }
-          value={id}
-          onChangeText={handleIdChange}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Password"
-          value={password}
-          onChangeText={handlePasswordChange}
-          secureTextEntry={true}
-        />
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Forget Password"
-            onPress={handleForgetPassword}
-            color="#6200ee"
+    <VStack
+      space={"8"}
+      flex={"1"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <Heading size={"xl"}>{route.params.type} Login</Heading>
+      <VStack space={"4"} w="xs" bg="white" borderRadius={"8"} p="4">
+        <FormControl isRequired>
+          <FormControl.Label>
+            {route.params.type.toLowerCase() === "teacher"
+              ? "Teacher ID"
+              : "Roll no"}
+          </FormControl.Label>
+          <Input
+            /* https://github.com/GeekyAnts/NativeBase/issues/5420#issuecomment-1364651787 */
+            _input={{ cursorColor: "#303030", selectionColor: "#30303080" }}
+            placeholder={
+              route.params.type === "Teacher"
+                ? "Enter Teacher ID"
+                : "Enter Roll no"
+            }
+            value={id}
+            onChangeText={handleIdChange}
           />
-          <Button title="Login" onPress={handleLogin} color="#6200ee" />
-        </View>
-        <Dialog isVisible={visible1} onBackdropPress={toggleDialog1}>
-          <Dialog.Title title="Message" />
-          <Text>Incorrect Password</Text>
-          <Dialog.Actions>
-            <Dialog.Button title="OK" onPress={toggleDialog1} />
-          </Dialog.Actions>
-        </Dialog>
-      </View>
-    </View>
+        </FormControl>
+        <FormControl isRequired>
+          <FormControl.Label>Password</FormControl.Label>
+          <Input
+            /* https://github.com/GeekyAnts/NativeBase/issues/5420#issuecomment-1364651787 */
+            _input={{ cursorColor: "#303030", selectionColor: "#30303080" }}
+            placeholder="Enter Password"
+            value={password}
+            onChangeText={handlePasswordChange}
+            secureTextEntry={true}
+          />
+        </FormControl>
+
+        <HStack justifyContent={"space-between"}>
+          <Button onPress={handleForgetPassword}>Forget Password</Button>
+          <Button onPress={handleLogin}>Login</Button>
+        </HStack>
+      </VStack>
+    </VStack>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: "#6200ee",
-  },
-  formContainer: {
-    width: "80%",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#6200ee",
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 4,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 20,
-  },
-});
-
-export default LoginScreen;
+}

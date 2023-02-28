@@ -11,12 +11,16 @@ const CurrentPeriodCard = ({
     <View style={styles.cardContainer}>
       <Text style={styles.periodTitle}>{period}</Text>
       <View style={styles.buttonContainer}>
-        <Button
-          onPress={onMarkAttendancePress}
-          buttonStyle={{ padding: 16, borderRadius: 5 }}
-        >
-          <Text style={styles.buttonText}>{"Mark\nAttendance"}</Text>
-        </Button>
+        {period.toLowerCase() !== "end of day" ? (
+          <Button
+            onPress={onMarkAttendancePress}
+            buttonStyle={{ padding: 16, borderRadius: 5 }}
+          >
+            <Text style={styles.buttonText}>{"Mark\nAttendance"}</Text>
+          </Button>
+        ) : (
+          <></>
+        )}
       </View>
     </View>
   );

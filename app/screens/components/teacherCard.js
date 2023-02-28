@@ -1,3 +1,4 @@
+import { API_URL } from "../../globals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Card } from "@rneui/base";
 import React, { useState, useEffect } from "react";
@@ -8,9 +9,7 @@ const TeacherCard = () => {
 
   useEffect(() => {
     AsyncStorage.getItem("loginId").then((id) => {
-      fetch(
-        `https://lionfish-app-t784j.ondigitalocean.app/api/getProfileDetails/teacher/${id}`
-      )
+      fetch(`${API_URL}/api/getProfileDetails/teacher/${id}`)
         .then((response) => response.json())
         .then((data) => {
           setTeacherData(data);

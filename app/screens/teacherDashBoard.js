@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Card } from "@rneui/base";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
-import CurrentPeriod from "./components/currentPeriod";
-import CurrentDay from "./components/currentDay";
+import { API_URL } from "../globals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import convertDateTimeIsoToTime from "../utils/utils";
-import getCurrentWeekday from "../utils/day";
+import { Card } from "@rneui/base";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  findCurrentPeriod,
+  currentPeriodHelper,
+  getCurrentWeekday,
+  convertDateTimeIsoToTime,
+} from "../utils";
+import CurrentDay from "./components/currentDay";
 import CurrentPeriodCard from "./components/currentPeriodCard";
-import currentPeriodHelper from "../utils/currentperiodhelper";
-import findCurrentPeriod from "../utils/currentPeriod";
-import SimpleDialog from "./components/dialog";
-import { NativeModules, DeviceEventEmitter } from "react-native";
-import { requestLocationPermission } from "../permission";
 import TeacherCard from "./components/teacherCard";
+
 const TeacherDashboard = ({ navigation }) => {
   const [timetable, setTimetable] = useState([
     // {
@@ -31,7 +31,7 @@ const TeacherDashboard = ({ navigation }) => {
       const id = await AsyncStorage.getItem("loginId");
       setTeacherId(id);
       var timetableData = await fetch(
-        `https://lionfish-app-t784j.ondigitalocean.app/api/getScheduleTeacher/${id}`
+        `${API_URL}/api/getScheduleTeacher/${id}`
       );
       timetableData = await timetableData.json();
       var finalClassess = [];

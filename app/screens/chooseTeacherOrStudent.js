@@ -1,58 +1,40 @@
-import React, { Component } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { Heading, Image, Pressable, Stack, Text } from "native-base";
 
-const ChooseTeacherOrStudent = ({ navigation }) => {
+const ImageButton = ({ type, image, navigation }) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => navigation.navigate("LoginScreen", {type: "Teacher"})}
-      >
-        <Image
-          source={require("../assets/teacher.png")}
-          style={styles.buttonImage}
-        />
-        <Text style={styles.buttonText}>Teacher</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => navigation.navigate("LoginScreen", {type: "Student"})}
-      >
-        <Image
-          source={require("../assets/student.png")}
-          style={styles.buttonImage}
-        />
-        <Text style={styles.buttonText}>Student</Text>
-      </TouchableOpacity>
-    </View>
+    <Pressable
+      _pressed={{ opacity: "0.5" }}
+      onPress={() => navigation.navigate("LoginScreen", { type: type })}
+    >
+      <Stack bg={"white"} borderRadius={"8"} space="2" p="8">
+        <Image source={image} alt="" width={"100"} height={"100"} />
+        <Text fontSize={"2xl"}>{type}</Text>
+      </Stack>
+    </Pressable>
   );
 };
 
-export default ChooseTeacherOrStudent;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "row", // Change the layout direction to row
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonContainer: {
-    flex: 1, // Use flex to make buttons fill the available space
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 10,
-  },
-  buttonImage: {
-    width: 100,
-    height: 100,
-    resizeMode: "contain",
-    margin: 10,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    margin: 10,
-  },
-});
+export default function ChooseTeacherOrStudent({ navigation }) {
+  return (
+    <Stack
+      space={"8"}
+      alignItems={"center"}
+      flex={"1"}
+      justifyContent={"center"}
+    >
+      <Heading size="3xl" textAlign={"center"}>
+        Login
+      </Heading>
+      <ImageButton
+        type={"Teacher"}
+        image={require("../assets/teacher.png")}
+        navigation={navigation}
+      />
+      <ImageButton
+        type={"Student"}
+        image={require("../assets/student.png")}
+        navigation={navigation}
+      />
+    </Stack>
+  );
+}

@@ -3,27 +3,29 @@ import { Card } from "@rneui/base";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import * as LocalAuthentication from "expo-local-authentication";
+import { Button, Divider, HStack, Heading, Text, VStack } from "native-base";
 import React, { useEffect, useState } from "react";
-import {
-  NativeModules,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { NativeModules, ScrollView, StyleSheet, View } from "react-native";
 import { requestLocationPermission } from "../permission";
-import findCurrentPeriod from "../utils/currentPeriod";
-import currentPeriodHelper from "../utils/currentperiodhelper";
-import getCurrentWeekday from "../utils/day";
-import convertDateTimeIsoToTime from "../utils/utils";
+import {
+  convertDateTimeIsoToTime,
+  currentPeriodHelper,
+  findCurrentPeriod,
+  getCurrentWeekday,
+} from "../utils";
 import CurrentDay from "./components/currentDay";
 import CurrentPeriodCard from "./components/currentPeriodCard";
+import { API_URL } from "../globals";
 import DismissablePopup from "./components/finalDialog";
 dayjs.extend(customParseFormat);
-const StudentDashboard = () => {
-  const [studentName, setStudentName] = useState("John Doe");
-  const [currentYear, setCurrentYear] = useState("2022");
-  const [rollNumber, setRollNumber] = useState("123456");
+
+export default function StudentDashboard() {
+  const [studentInfo, setStudentInfo] = useState({
+    name: "John Doe",
+    currentYear: 2,
+    rollNumber: "123456",
+    percent: 0,
+  });
   const [dialogVisible, setDialogVisible] = useState(false);
   const [timetable, setTimetable] = useState([
     // {
@@ -36,25 +38,40 @@ const StudentDashboard = () => {
   ]);
   const [currentPeriod, setcurrentPeriod] = useState("No Class");
   const [bottomText, setBottomText] = useState("");
-  const [percent, setPercent] = useState(0);
-  useEffect(() => {
-    (async function () {
-      const id = await AsyncStorage.getItem("loginId");
-      console.log("vk_12 " + id);
-      var data = await fetch(
-        `https://lionfish-app-t784j.ondigitalocean.app/api/getProfileDetails/student/${id}`
-      );
-      data = await data.json();
-      setRollNumber(data.rollNo);
-      setCurrentYear(data.year);
-      setStudentName(data.name);
 
-      var timetableData = await fetch(
-        `https://lionfish-app-t784j.ondigitalocean.app/api/getScheduleStudent/${id}`
+  useEffect(() => {
+    async function asyncFn() {
+      console.log("get async item loginId");
+      const id = await AsyncStorage.getItem("loginId");
+      console.log("got async item loginId: " + id);
+
+      console.log(`fetching student info: ${id}`);
+      let data = await fetch(`${API_URL}/api/getProfileDetails/student/${id}`);
+      data = await data.json();
+      console.log(`fetched student info: ${id}`);
+
+      console.log(`fetching student attendance percentage: ${id}`);
+      let percent = await fetch(`${API_URL}/api/getStudentPercentage/${id}`);
+      percent = (await percent.text()).toString();
+      console.log(`fetched student attendance percentage: ${id}`);
+
+      setStudentInfo({
+        name: data.name,
+        currentYear: data.year,
+        rollNumber: data.rollNo,
+        percent: percent,
+      });
+
+      console.log(`fetching student schedule: ${id}`);
+      let timetableData = await fetch(
+        `${API_URL}/api/getScheduleStudent/${id}`
       );
       timetableData = await timetableData.json();
-      var finalClassess = [];
-      timetableData = timetableData.forEach((period) => {
+      console.log(`fetched student schedule: ${id}`);
+      console.log(`student schedule: ${JSON.stringify(timetableData)}`);
+
+      const finalClassess = [];
+      timetableData.forEach((period) => {
         finalClassess.push({
           name: period.subject,
           time: convertDateTimeIsoToTime(period.start),
@@ -62,17 +79,12 @@ const StudentDashboard = () => {
         });
       });
 
-      var percent = await fetch(
-        `https://lionfish-app-t784j.ondigitalocean.app/api/getStudentPercentage/${id}`
-      );
-      percent = (await percent.text()).toString();
-      setPercent(percent);
-
       finalClassess.push({
         name: "End of Day",
         time: " 3:55 PM",
         helperTime: "15:55",
       });
+      console.log(`student periods: ${JSON.stringify(finalClassess)}`);
 
       setTimetable([
         {
@@ -80,15 +92,56 @@ const StudentDashboard = () => {
           classes: finalClassess,
         },
       ]);
-      console.log(
-        "hitesh" + findCurrentPeriod(finalClassess.map((e) => e.helperTime))
+
+      const currentPeriodIdx = findCurrentPeriod(
+        finalClassess.map((e) => e.helperTime)
       );
-      setcurrentPeriod(
-        finalClassess[findCurrentPeriod(finalClassess.map((e) => e.helperTime))]
-          .name
-      );
-    })();
+      console.log(`student current period index: ${currentPeriodIdx}`);
+      setcurrentPeriod(finalClassess[currentPeriodIdx].name);
+    }
+
+    asyncFn();
   }, []);
+
+  return (
+    <VStack>
+      <Heading textAlign={"center"} my="4">
+        Student Dashboard
+      </Heading>
+      <Divider />
+      <VStack bg={"white"} borderRadius={"8"} p="4" m="8">
+        <Text>
+          <Text bold>Name:</Text> {studentInfo.name}
+        </Text>
+        <Text>
+          <Text bold>Year:</Text> {studentInfo.currentYear}
+        </Text>
+        <Text>
+          <Text bold>Roll no:</Text> {studentInfo.rollNumber}
+        </Text>
+        <Text>
+          <Text bold>Attendance Percent:</Text> {studentInfo.percent}
+        </Text>
+      </VStack>
+
+      <Heading textAlign={"center"} mb="2">
+        Timetable for {"todo"}
+      </Heading>
+      <Divider />
+      <ScrollView>
+        <VStack>
+          <HStack justifyContent={"space-between"}>
+            <Text></Text>
+            <Text></Text>
+          </HStack>
+        </VStack>
+      </ScrollView>
+      <VStack>
+        <Text></Text>
+        <Button></Button>
+      </VStack>
+    </VStack>
+  );
 
   return (
     <View style={styles.container}>
@@ -99,10 +152,16 @@ const StudentDashboard = () => {
       ></DismissablePopup>
       <Text className="text-lg font-bold text-center">Student Dashboard</Text>
       <Card>
-        <Text style={styles.infoText}>Student Name: {studentName}</Text>
-        <Text style={styles.infoText}>Current Year: {currentYear}</Text>
-        <Text style={styles.infoText}>Roll Number: {rollNumber}</Text>
-        <Text style={styles.infoText}>Attendance Percent {percent}%</Text>
+        <Text style={styles.infoText}>Student Name: {studentInfo.name}</Text>
+        <Text style={styles.infoText}>
+          Current Year: {studentInfo.currentYear}
+        </Text>
+        <Text style={styles.infoText}>
+          Roll Number: {studentInfo.rollNumber}
+        </Text>
+        <Text style={styles.infoText}>
+          Attendance Percent {studentInfo.percent}%
+        </Text>
       </Card>
       <CurrentDay />
 
@@ -180,7 +239,7 @@ const StudentDashboard = () => {
       </ScrollView>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -234,5 +293,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
-export default StudentDashboard;

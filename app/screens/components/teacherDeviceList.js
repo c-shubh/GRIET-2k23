@@ -1,3 +1,4 @@
+import { API_URL } from "../../globals";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -11,12 +12,11 @@ import {
 
 const DeviceList = (props) => {
   console.log(props.toString() + "hiiyy");
-  
+
   const devices = props.devices;
 
   useEffect(() => {
-
-    if(props.shouldSubmit) {
+    if (props.shouldSubmit) {
       // send post request
       // periodId
       // teacherId
@@ -27,10 +27,9 @@ const DeviceList = (props) => {
       var studentRollNumbers = {};
 
       devices.forEach((e) => {
-        studentRollNumbers[`${e.name}`] = e.checked; 
+        studentRollNumbers[`${e.name}`] = e.checked;
       });
-      fetch("https://lionfish-app-t784j.ondigitalocean.app/api/submitAttendanceForClass",
-        {
+      fetch(`${API_URL}/api/submitAttendanceForClass`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -38,13 +37,11 @@ const DeviceList = (props) => {
           teacherID: teacherId,
           classID: classID,
           date: Date.now(),
-          studentRollNumbers: studentRollNumbers
+          studentRollNumbers: studentRollNumbers,
         }),
-      }
-      )
-      
+      });
     }
-  }, [props.shouldSubmit])
+  }, [props.shouldSubmit]);
 
   const toggleCheck = (index) => {
     Alert.alert(

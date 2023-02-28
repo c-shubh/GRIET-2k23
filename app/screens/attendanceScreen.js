@@ -5,6 +5,7 @@ import { NativeModules, DeviceEventEmitter } from "react-native";
 import { requestLocationPermission } from "../permission";
 import TeacherDevicesList from "./components/teacherDeviceList";
 import AttendanceButton from "./components/startAttendance";
+import { API_URL } from "../globals";
 
 function NearbyDevicesScreen({ route }) {
   const [devices, setDevices] = useState([
@@ -15,9 +16,7 @@ function NearbyDevicesScreen({ route }) {
   const [submit, setSubmit] = useState(false);
   const classId = route.params.classId;
   useEffect(() => {
-    fetch(
-      `https://lionfish-app-t784j.ondigitalocean.app/api/getClassStudentRollNos/${classId}`
-    )
+    fetch(`${API_URL}/api/getClassStudentRollNos/${classId}`)
       .then((res) => {
         return res.json();
       })
