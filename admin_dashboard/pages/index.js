@@ -1,16 +1,16 @@
-import { Table, Select } from "antd";
-import { useState, useEffect } from "react";
 import {
   Box,
-  Flex,
   Center,
+  Flex,
   Heading,
-  Spacer,
   Input,
+  Spacer,
   Tag,
 } from "@chakra-ui/react";
+import { Table } from "antd";
+import { useEffect, useState } from "react";
 import { RotatingLines } from "react-loader-spinner";
-import BarGraph from "../components/BarGraph";
+import Charts from "../components/Charts";
 const AttendanceTable = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ const AttendanceTable = () => {
     chartdata.present = Math.abs(64 - chartdata.absent);
     return chartdata;
   };
-  let query = chartinfo(filteredData[0]);
+  let query = attendanceData;
 
   const columns = [
     {
@@ -176,7 +176,7 @@ const AttendanceTable = () => {
               </Flex>
               {query && (
                 <>
-                  <BarGraph present={query.present} absent={query.absent} />
+                  <Charts attendanceLog={attendanceData} />
                 </>
               )}
               <Table dataSource={filteredData} columns={columns} />
