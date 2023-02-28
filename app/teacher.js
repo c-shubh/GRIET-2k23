@@ -15,10 +15,10 @@ export default function Teacher() {
   const [devices, setDevices] = useState(["devices displayed here"]);
 
   useEffect(() => {
-    NativeModules.ContactTracerModule.setUserId("teacher123").then((userId) => {
-      NativeModules.ContactTracerModule.initialize()
+    NativeModules.RnNDAModule.setUserId("teacher123").then((userId) => {
+      NativeModules.RnNDAModule.initialize()
         .then((result) => {
-          return NativeModules.ContactTracerModule.isBLEAvailable();
+          return NativeModules.RnNDAModule.isBLEAvailable();
         })
 
         .then((isBLEAvailable) => {
@@ -33,7 +33,7 @@ export default function Teacher() {
         })
 
         .then((locAvi) => {
-          return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
+          return NativeModules.RnNDAModule.tryToTurnBluetoothOn();
         })
 
         .then((sup) => {
@@ -54,7 +54,7 @@ export default function Teacher() {
         })
 
         .then((e) => {
-          NativeModules.ContactTracerModule.enableTracerService();
+          NativeModules.RnNDAModule.enableTracerService();
         });
     });
   }, []);

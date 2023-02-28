@@ -137,41 +137,39 @@ const StudentDashboard = () => {
                   setDialogVisible(true);
                   return;
                 }
-                NativeModules.ContactTracerModule.setUserId(id).then(
-                  (userId) => {
-                    NativeModules.ContactTracerModule.initialize()
-                      .then((result) => {
-                        return NativeModules.ContactTracerModule.isBLEAvailable();
-                      })
+                NativeModules.RnNDAModule.setUserId(id).then((userId) => {
+                  NativeModules.RnNDAModule.initialize()
+                    .then((result) => {
+                      return NativeModules.RnNDAModule.isBLEAvailable();
+                    })
 
-                      .then((isBLEAvailable) => {
-                        if (isBLEAvailable) {
-                          console.log("ble avail");
-                          // BLE is available, continue requesting Location Permission
-                          return requestLocationPermission();
-                        } else {
-                          // BLE is not available, don't do anything furthur since BLE is required
-                          console.log("ble not avail");
-                        }
-                      })
+                    .then((isBLEAvailable) => {
+                      if (isBLEAvailable) {
+                        console.log("ble avail");
+                        // BLE is available, continue requesting Location Permission
+                        return requestLocationPermission();
+                      } else {
+                        // BLE is not available, don't do anything furthur since BLE is required
+                        console.log("ble not avail");
+                      }
+                    })
 
-                      .then((locAvi) => {
-                        return NativeModules.ContactTracerModule.tryToTurnBluetoothOn();
-                      })
-                      .then(() => {
-                        console.log("tuend on");
-                      })
+                    .then((locAvi) => {
+                      return NativeModules.RnNDAModule.tryToTurnBluetoothOn();
+                    })
+                    .then(() => {
+                      console.log("tuend on");
+                    })
 
-                      .then((e) => {
-                        NativeModules.ContactTracerModule.enableTracerService();
-                      })
+                    .then((e) => {
+                      NativeModules.RnNDAModule.enableTracerService();
+                    })
 
-                      .then((e) => {
-                        setBottomText("Attendance Request Sent!");
-                        setDialogVisible(true);
-                      });
-                  }
-                );
+                    .then((e) => {
+                      setBottomText("Attendance Request Sent!");
+                      setDialogVisible(true);
+                    });
+                });
               }
             }}
           />
