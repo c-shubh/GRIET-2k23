@@ -65,7 +65,7 @@ const AttendanceTable = () => {
     chartdata.present = Math.abs(64 - chartdata.absent);
     return chartdata;
   };
-  let query = attendanceData;
+  let query = chartinfo(attendanceData);
 
   const columns = [
     {
